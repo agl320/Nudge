@@ -1,0 +1,11 @@
+Flask[async]
+Flask-SocketIO
+flask-cors
+numpy
+torch
+faster-whisper
+openai-whisper
+wave
+sounddevice
+scipy
+uvicorn
