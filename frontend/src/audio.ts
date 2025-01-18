@@ -11,7 +11,6 @@ class VoiceRecorder {
     private silenceDuration: number;
     private onDataAvailable: ((data: Uint8Array) => void) | null;
     private meetingID: string;
-    private requestAnimationFrameID: number;
 
     constructor(stream: MediaStream, socket: Socket, meetingID: string) {
         const audioTrack = stream.getAudioTracks()[0];
@@ -93,7 +92,7 @@ class VoiceRecorder {
                 }, this.silenceDuration);
             }
 
-            this.requestAnimationFrameID = requestAnimationFrame(checkAudioLevel);
+            requestAnimationFrame(checkAudioLevel);
         };
 
         this.isRecording = true;
@@ -103,10 +102,6 @@ class VoiceRecorder {
     stop() {
         this.isRecording = false;
 
-        if (this.requestAnimationFrameID) {
-            cancelAnimationFrame(this.requestAnimationFrameID);
-        }
-        
         if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
             this.mediaRecorder.stop();
         }

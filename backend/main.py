@@ -33,7 +33,7 @@ def join_meeting(data):
         meetings[meeting_id].append(user_id)
 
     join_room(meeting_id)  # this allows all the events emitted from this socket sid to only be sent to the room
-    emit('user_joined', {'user_id': user_id}, room=meeting_id)
+    emit('user_joined', {'user_id': user_id}, room=meeting_id, skip_sid=user_id)
     logger.info(f"User {user_id} joined meeting {meeting_id}")
 
 

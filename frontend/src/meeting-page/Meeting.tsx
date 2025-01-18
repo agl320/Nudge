@@ -8,7 +8,7 @@ const socket = io("http://127.0.0.1:5555");
 
 export default function Meeting() {
 
-    const { meetingId } = useParams();
+    const { meetingID } = useParams();
 
     const [remoteStreams, setRemoteStreams] = useState<{[key: string]: MediaStream;}>({}); // remote user streams
 
@@ -17,11 +17,7 @@ export default function Meeting() {
     const localStream = useRef<MediaStream | null>(null); // local media stream
     const voiceRecorderRef = useRef<VoiceRecorder | null>(null);
 
-    const processAudio = async (stream: MediaStream) => {
-        voiceRecorderRef.current = new VoiceRecorder(stream, socket, meetingId!!)
-        voiceRecorderRef.current.start();
-    }
-
+    // start local video/audio stream
     const startLocalStream = async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
@@ -39,6 +35,13 @@ export default function Meeting() {
         }
     };
 
+    const processAudio = async (stream: MediaStream) => {
+        voiceRecorderRef.current = new VoiceRecorder(stream, socket, meetingID || "")
+        voiceRecorderRef.current.start();
+    }
+
+
+    // set up WebRTC connections
     const setupWebRTC = async () => {
         const config = {
             iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
@@ -46,7 +49,6 @@ export default function Meeting() {
 
         // handle new user joining
         socket.on("user_joined", async ({ user_id }) => {
-            console.log(`User ${user_id} joined`);
             const peerConnection = new RTCPeerConnection(config);
             peerConnections.current[user_id] = peerConnection; // save connection
 
@@ -143,15 +145,19 @@ export default function Meeting() {
     };
 
     // join meeting
-    const joinMeeting = async () => {        
-        socket.emit("join_meeting", { meeting_id: meetingId }); // notify server
+    const joinMeeting = async () => {
+        if (!meetingID) return; // require meeting ID
+        await startLocalStream(); // start local video/audio
+        await setupWebRTC(); // set up connections
+        socket.emit("join_meeting", { meeting_id: meetingID }); // notify server
     };
 
     // leave meeting
     const leaveMeeting = () => {
-        socket.emit("leave_meeting", { meeting_id: meetingId }); // notify server
-        // close all connections and stop local stream, stop voice recording
+        socket.emit("leave_meeting", { meeting_id: meetingID }); // notify server
+        // stop recording audio
         voiceRecorderRef.current?.stop();
+        // close all connections and stop local stream
         Object.values(peerConnections.current).forEach((pc) => pc.close());
         peerConnections.current = {};
         setRemoteStreams({});
@@ -159,19 +165,26 @@ export default function Meeting() {
         localStream.current = null;
     };
 
+    const removeSocketListeners = () => {
+        socket.off("user_joined");
+        socket.off("signal");
+        socket.off("user_left");
+    }
+
+    
+
     useEffect(() => {
         joinMeeting();
-        startLocalStream();
-        setupWebRTC();
+        return removeSocketListeners;
     }, [])
 
 
     return (
         <div>
             <h1>Meeting</h1>
-            <p>Meeting ID: {meetingId}</p>
+            <p>Meeting ID: {meetingID}</p>
             <p>{Object.keys(remoteStreams).length} users in meeting</p>
-            <video ref={localVideoRef} autoPlay muted />
+            <video ref={localVideoRef} autoPlay muted style={{ transform: 'scaleX(-1)' }} />
             <div>
                 {Object.entries(remoteStreams).map(([id, stream]) => (
                     <video
@@ -183,6 +196,7 @@ export default function Meeting() {
                                 ref.srcObject = stream; // attach remote stream
                             }
                         }}
+                        style={{ transform: 'scaleX(-1)' }}
                     />
                 ))}
             </div>

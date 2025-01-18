@@ -165,11 +165,6 @@ const App = () => {
         localStream.current = null;
     };
 
-    const removeSocketListeners = () => {
-        socket.off("user_joined");
-        socket.off("signal");
-        socket.off("user_left");
-    }
 
     return (
         <div>
