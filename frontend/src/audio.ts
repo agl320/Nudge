@@ -5,7 +5,7 @@ class VoiceRecorder {
     private mediaRecorder: MediaRecorder | null;
     private audioContext: AudioContext;
     private chunks: Blob[];
-    private isRecording: boolean;
+    public isRecording: boolean;
     private silenceTimeout: NodeJS.Timeout | null;
     private silenceThreshold: number;
     private silenceDuration: number;

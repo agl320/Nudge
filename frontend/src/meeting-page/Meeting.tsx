@@ -11,12 +11,13 @@ export default function Meeting() {
     const { meetingID } = useParams();
 
     const [remoteStreams, setRemoteStreams] = useState<{[key: string]: MediaStream;}>({}); // remote user streams
+    const [isAudioMuted, setIsAudioMuted] = useState(false);
 
     const localVideoRef = useRef<HTMLVideoElement>(null); // local video element
     const peerConnections = useRef<{ [key: string]: RTCPeerConnection }>({}); // map user ID to RTCPeerConnection
     const localStream = useRef<MediaStream | null>(null); // local media stream
     const voiceRecorderRef = useRef<VoiceRecorder | null>(null);
-
+    
     // start local video/audio stream
     const startLocalStream = async () => {
         try {
@@ -165,13 +166,26 @@ export default function Meeting() {
         localStream.current = null;
     };
 
+    const toggleMute = () => {
+        if (!localStream.current) return;
+        const audioTrack = localStream.current.getAudioTracks()[0];
+        if (audioTrack) {
+            setIsAudioMuted(!isAudioMuted);
+        }
+        if (!audioTrack.enabled) {
+            voiceRecorderRef.current?.start();
+            audioTrack.enabled = true;
+        } else {
+            voiceRecorderRef.current?.stop();
+            audioTrack.enabled = false;
+        }
+    }
+
     const removeSocketListeners = () => {
         socket.off("user_joined");
         socket.off("signal");
         socket.off("user_left");
     }
-
-    
 
     useEffect(() => {
         joinMeeting();
@@ -201,6 +215,7 @@ export default function Meeting() {
                 ))}
             </div>
             <button onClick={leaveMeeting}>Leave Meeting</button>
+            <button onClick={toggleMute}>{isAudioMuted ? "Unmute" : "Mute"}</button>
         </div>
     );
 }
