@@ -3,6 +3,7 @@ import LoginForm from "./LoginForm";
 import { Button } from "../ui/button";
 import { Link } from "react-router";
 import { Separator } from "../ui/separator";
+import { GoogleSignIn } from "@/service/firebaseContext";
 
 function Login() {
     return (
@@ -44,9 +45,10 @@ function Login() {
                                 </div>
                             </div>
                             <div className="flex justify-center">
-                                <Button className="bg-white text-black">
+                                {/* <Button className="bg-white text-black">
                                     Log In with Google
-                                </Button>
+                                </Button> */}
+                                <GoogleSignIn />
                             </div>
                             <div className="flex justify-center">
                                 <span className="block">
