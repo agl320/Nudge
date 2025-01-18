@@ -40,7 +40,7 @@ function LoginForm() {
                     name="email"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Email</FormLabel>
+                            <FormLabel>$ Email</FormLabel>
                             <FormControl>
                                 <Input
                                     placeholder="Email"
