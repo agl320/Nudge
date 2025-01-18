@@ -37,7 +37,7 @@ class Transcriber:
             audio_array = np.copy(audio_array)
 
             # Transcribe using Whisper
-            result = self.model.transcribe(audio_array)
+            result = self.model.transcribe(audio_array, language="en")
             
             # Extract the transcribed text
             transcribed_text = result["text"]

@@ -10,7 +10,7 @@ import Meeting from "./meeting-page/Meeting";
 const router = createBrowserRouter([
     { errorElement: <NotFound /> },
     { path: "/", element: <App /> },
-    { path: "/meeting/:id", element: <Meeting /> },
+    { path: "/meeting/:meetingId", element: <Meeting /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
