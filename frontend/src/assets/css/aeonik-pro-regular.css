@@ -1,0 +1,6 @@
+@font-face {
+    font-family: "Aeonik Pro Regular"; /* Replace with your font's name */
+    src: url("../fonts/Aeonik-Pro-Regular.ttf") format("truetype"); /* Adjust the path if needed */
+    font-weight: 100 200 300 400 500 600 700 800 900; /* Declare the full weight range of the variable font */
+    font-style: normal;
+}
