@@ -16,6 +16,7 @@ export default {
                 display: ["Aeonik Pro Regular", "sans-serif"],
             },
             colors: {
+                "pastel-green": "#32e829",
                 background: "hsl(var(--background))",
                 foreground: "hsl(var(--foreground))",
                 card: {
