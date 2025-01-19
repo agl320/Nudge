@@ -10,3 +10,4 @@ sounddevice
 scipy
 uvicorn
 sentence_transformers
+firebase-admin
