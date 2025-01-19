@@ -51,6 +51,7 @@ export default function Meeting() {
 
     const [meetingDocumentId, setMeetingDocumentId] = useState(null);
     const [loadingMeetingDoc, setLoadingMeetingDoc] = useState(true);
+    const [emojiStatus, setEmojiStatus] = useState(true);
     const [meetingData, setMeetingData] = useState<MeetingData | null>(null); // State to store the document data
 
     // useEffect oo listen for document changes
@@ -280,6 +281,10 @@ export default function Meeting() {
             ({ user_id, sentence }: { user_id: string; sentence: string }) => {}
         );
 
+        socket.on("emoji_status", ({ is_outlier } : {is_outlier : boolean}) => {
+            setEmojiStatus(is_outlier);
+        });
+
         socket.on("user_talking", ({ user_id }) => {
             console.log(`${user_id} is talking`);
             setTalkingRemoteUsers((prev) => {
@@ -456,35 +461,32 @@ export default function Meeting() {
     }
 
     return (
-        <div className="h-screen w-screen bg-black bg-cover overflow-x-hidden">
-            <div className="h-full w-full bg-black max-w-full mx-auto flex flex-col flex-1 px-24">
-                <NavBar user={user} />
-                <div className="flex py-8 h-full">
-                    <MeetingInfo
-                        meetingID={meetingID}
-                        user={user}
-                        remoteStreams={remoteStreams}
-                        meetingData={meetingData}
-                        onTopic={onTopic}
-                        handleNextTopic={handleNextTopic}
-                    />
-                    <VideoSection
-                        localVideoRef={localVideoRef}
-                        displayedStreams={displayedStreams}
-                        handleLeftClick={handleLeftClick}
-                        handleRightClick={handleRightClick}
-                        sliderValue={sliderValue}
-                        handleChange={handleChange}
-                        toggleMute={toggleMute}
-                        leaveMeeting={leaveMeeting}
-                        isAudioMuted={isAudioMuted}
-                    />
-                    <ActivityLog
-                        chatStream={chatStream}
-                        leaveMeeting={leaveMeeting}
-                    />
-                </div>
-            </div>
+      <div className="h-screen w-screen bg-black bg-cover overflow-x-hidden">
+        <div className="h-full w-full bg-black max-w-full mx-auto flex flex-col flex-1 px-24">
+          <NavBar user={user} />
+          <div className="flex py-8 h-full">
+            <MeetingInfo
+              meetingID={meetingID}
+              user={user}
+              remoteStreams={remoteStreams}
+              meetingData={meetingData}
+              onTopic={onTopic}
+              handleNextTopic={handleNextTopic}
+            />
+            <VideoSection
+              localVideoRef={localVideoRef}
+              displayedStreams={displayedStreams}
+              handleLeftClick={handleLeftClick}
+              handleRightClick={handleRightClick}
+              sliderValue={sliderValue}
+              handleChange={handleChange}
+              toggleMute={toggleMute}
+              leaveMeeting={leaveMeeting}
+              isAudioMuted={isAudioMuted}
+            />
+            <ActivityLog chatStream={chatStream} leaveMeeting={leaveMeeting} onTopic={emojiStatus} />
+          </div>
         </div>
+      </div>
     );
 }
