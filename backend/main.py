@@ -106,6 +106,7 @@ def context_detection_worker():
     while True:
         # stuff I can use directly
         timestamp, meeting_id, user_id, sentence = sentence_queue.get()
+        emit("transcription", {'time_stamp':timestamp,'user_id': user_id, 'sentence': sentence}, room=meeting_id)
         detector = context_detectors.get(meeting_id)
         if not detector:
             context_detectors[meeting_id] = ContextualOutlierDetector()
