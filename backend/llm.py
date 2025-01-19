@@ -32,9 +32,6 @@ class LLM:
             print("Generated content: ", content)
             # process generated llm content
             sentences = content.split('.')
-            if sentences[-1][-1] != '.':
-                # remove last incomplete sentence
-                sentences = sentences[:-1]
             # strip for better formatting    
             sentences = [sentence.strip() for sentence in sentences]
             print("Processed sentences: ", sentences)

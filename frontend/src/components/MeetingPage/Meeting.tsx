@@ -19,6 +19,7 @@ import {
     query,
     where,
 } from "firebase/firestore";
+import LoadingScreen from "./LoadingScreen";
 import { Toaster } from "../ui/toaster";
 import { useToast } from "@/hooks/use-toast";
 
@@ -84,69 +85,71 @@ export default function Meeting() {
 
     const [meetingDocumentId, setMeetingDocumentId] = useState(null);
     const [loadingMeetingDoc, setLoadingMeetingDoc] = useState(true);
-    const [meetingData, setMeetingData] = useState<MeetingData | null>(null); // State to store the document data
+    const [meetingData, setMeetingData] = useState<any | null>(null); // State to store the document data
+    const [contextCreated, setContextCreated] = useState<boolean>(false);
 
     // useEffect oo listen for document changes
 
-    useEffect(() => {
-        const fetchMeetingDocumentId = async () => {
-            try {
-                // Reference the Firestore "meetings" collection
-                const meetingCollectionRef = collection(firestore, "meetings");
+    // useEffect(() => {
+    //     const fetchMeetingDocumentId = async () => {
+    //         try {
+    //             // Reference the Firestore "meetings" collection
+    //             const meetingCollectionRef = collection(firestore, "meetings");
 
-                // Create a query to find the document where meeting_id matches meetingID
-                const q = query(
-                    meetingCollectionRef,
-                    where("meeting_id", "==", meetingID)
-                );
+    //             // Create a query to find the document where meeting_id matches meetingID
+    //             const q = query(
+    //                 meetingCollectionRef,
+    //                 where("meeting_id", "==", meetingID)
+    //             );
 
-                // Execute the query
-                const querySnapshot = await getDocs(q);
+    //             // Execute the query
+    //             const querySnapshot = await getDocs(q);
 
-                // Check if any document matches and extract the ID
-                if (!querySnapshot.empty) {
-                    const meetingDoc = querySnapshot.docs[0];
-                    setMeetingDocumentId(meetingDoc.id); // Set the document ID
-                } else {
-                    console.warn(
-                        "No matching meeting found for ID:",
-                        meetingID
-                    );
-                }
-            } catch (error) {
-                console.error("Error fetching meeting document ID:", error);
-            } finally {
-                setLoadingMeetingDoc(false); // Stop loading spinner
-            }
-        };
+    //             // Check if any document matches and extract the ID
+    //             if (!querySnapshot.empty) {
+    //                 const meetingDoc = querySnapshot.docs[0];
+    //                 setMeetingDocumentId(meetingDoc.id); // Set the document ID
+    //             } else {
+    //                 console.warn(
+    //                     "No matching meeting found for ID:",
+    //                     meetingID
+    //                 );
+    //             }
+    //         } catch (error) {
+    //             console.error("Error fetching meeting document ID:", error);
+    //         } finally {
+    //             setLoadingMeetingDoc(false); // Stop loading spinner
+    //         }
+    //     };
 
-        if (meetingID) {
-            fetchMeetingDocumentId();
-        }
-    }, [firestore, meetingID]);
+    //     if (meetingID) {
+    //         fetchMeetingDocumentId();
+    //     }
+    // }, [firestore, meetingID]);
 
     // retrieve document data
     useEffect(() => {
         const fetchMeetingData = async () => {
-            if (meetingDocumentId) {
+            console.log(`MeetingID${meetingID}`)
+            if (meetingID) {
                 try {
                     // Reference the specific document in Firestore
                     const meetingDocRef = doc(
                         firestore,
                         "meetings",
-                        meetingDocumentId
+                        meetingID
                     );
 
                     // Fetch the document data
                     const meetingDoc = await getDoc(meetingDocRef);
 
                     if (meetingDoc.exists()) {
-                        console.log({ DATA: meetingDoc.data() });
-                        setMeetingData(meetingDoc.data() as MeetingData); // Store the document data in state
+                        console.log("DATA", { DATA: meetingDoc.data() });
+                        setMeetingData(meetingDoc.data()); // Store the document data in state
                     } else {
                         console.warn(
                             "No document found for ID:",
-                            meetingDocumentId
+                            meetingID
                         );
                     }
                 } catch (error) {
@@ -159,7 +162,7 @@ export default function Meeting() {
         };
 
         fetchMeetingData();
-    }, [meetingDocumentId, firestore]); // Re-run when meetingDocumentId changes
+    }, [meetingID, firestore, contextCreated]); // Re-run when meetingDocumentId changes
 
     useEffect(() => {
         setOnTopic(
@@ -371,6 +374,7 @@ export default function Meeting() {
             voiceRecorderRef.current?.stop();
             audioTrack.enabled = false;
         }
+        console.log("audio muted:", isAudioMuted);
     };
 
     const removeSocketListeners = () => {
@@ -384,6 +388,7 @@ export default function Meeting() {
 
     useEffect(() => {
         joinMeeting();
+        socket.on("context_created", () => setContextCreated(true));
         socket.on("transcription", (data) => {
             console.log("----------------------------------------");
             const { time_stamp, user_id, sentence } = data;
@@ -426,10 +431,6 @@ export default function Meeting() {
     const [onTopic, setOnTopic] = useState<string>(
         meetingData?.activities[0].label
     );
-
-    if (status === "loading") {
-        return <p>Loading...</p>;
-    }
 
     // TODO : send to backend
     const handleNextTopic = () => {
@@ -485,6 +486,17 @@ export default function Meeting() {
 
     if (!user) {
         navigate("/");
+    }
+
+    if (status === "loading") {
+        return <p>Loading...</p>;
+    }
+
+    console.log(contextCreated,{ meetingData });
+    if (
+        !meetingData?.activities?.every((activity) => activity.context?.length > 0) 
+    ) {
+        return <LoadingScreen user={user} />;
     }
 
     return (

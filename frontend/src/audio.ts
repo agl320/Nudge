@@ -55,6 +55,7 @@ class VoiceRecorder {
         const dataArray = new Float32Array(bufferLength);
 
         const checkAudioLevel = () => {
+            //console.log("checking recording state", this.isRecording);
             if (!this.isRecording) return;
 
             analyser.getFloatTimeDomainData(dataArray);
