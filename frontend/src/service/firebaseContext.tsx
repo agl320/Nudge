@@ -15,6 +15,7 @@ import {
     useSigninCheck,
 } from "reactfire";
 import { Button } from "@/components/ui/button";
+import { LogOut } from "lucide-react";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -87,8 +88,8 @@ export function UserSignOut() {
     };
 
     return (
-        <Button className="bg-white text-black" onClick={handleSignOut}>
-            Sign Out
+        <Button className="text-white bg-white/15" onClick={handleSignOut}>
+            <LogOut />
         </Button>
     );
 }

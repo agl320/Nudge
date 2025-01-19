@@ -6,8 +6,9 @@ import LoginForm from "./LoginForm";
 import { Link } from "react-router";
 import { useUser } from "reactfire";
 import { useNavigate } from "react-router-dom";
+import { Sparkle, Sparkles } from "lucide-react";
 
-function LoginFixed() {
+function Login() {
     const { status, data: user } = useUser();
     const navigate = useNavigate();
 
@@ -20,9 +21,28 @@ function LoginFixed() {
         return (
             <div className="bg-black bg-cover h-full w-screen">
                 <section className="flex flex-col flex-1 h-screen min-h-[900px] max-w-6xl mx-auto">
-                    <NavBar />
-                    <p>Logged in as user: {user.uid}</p>
-                    <UserSignOut />
+                    <NavBar user={user} />
+
+                    <div className="text-center mt-32 justify-center h-full">
+                        <div className="space-y-8">
+                            <p className="py-2 px-4 bg-white/15 text-white/50 inline-block rounded-md text-xs">
+                                $ Logged in as user: {user.uid}
+                            </p>
+
+                            <h1 className="text-4xl font-medium">
+                                Welcome back, {user.displayName}!
+                            </h1>
+
+                            <Link
+                                to="/meeting"
+                                className="block flex justify-center"
+                            >
+                                <Button className="bg-white text-black flex items-center gap-2">
+                                    Access Meeting Hub <Sparkles />
+                                </Button>
+                            </Link>
+                        </div>
+                    </div>
                 </section>
             </div>
         );
@@ -31,7 +51,7 @@ function LoginFixed() {
     return (
         <div className="bg-black bg-cover h-full w-screen">
             <section className="flex flex-col flex-1 h-screen min-h-[900px] max-w-6xl mx-auto">
-                <NavBar />
+                <NavBar user={user} />
                 <div className="lg:flex h-full justify-center ">
                     <div className="max-w-1/2 w-full my-8 bg-white/10  lg:mr-4 rounded-md flex flex-col justify-center">
                         <section className="space-y-8 p-16 text-center">
@@ -117,4 +137,4 @@ function LoginFixed() {
     );
 }
 
-export default LoginFixed;
+export default Login;
