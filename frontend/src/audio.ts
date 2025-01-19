@@ -89,6 +89,8 @@ class VoiceRecorder {
                 this.silenceTimeout = setTimeout(() => {
                     this.mediaRecorder!!.stop();
                     console.log("recording stopped")
+                    this.socket.emit("user_not_talking", {meeting_id: this.meetingID})
+                    console.log("user talking emitted")
                     this.convertAndEmit();
                 }, this.silenceDuration);
             }

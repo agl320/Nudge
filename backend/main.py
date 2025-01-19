@@ -92,6 +92,14 @@ def handleUserTalking(data):
     user_id = request.sid
     meeting_id = data['meeting_id']
     emit('user_talking', {'user_id': user_id}, room=meeting_id)
+    print("user talking emitted to ", user_id)
+    
+@socketio.on("user_not_talking")
+def handleUserNotTalking(data):
+    user_id = request.sid
+    meeting_id = data['meeting_id']
+    emit('user_not_talking', {'user_id': user_id}, room=meeting_id)
+    
 
 def context_detection_worker():
     logger.info("Starting context detection worker")

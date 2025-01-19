@@ -143,6 +143,18 @@ export default function Meeting() {
                 return updatedStreams;
             });
         });
+
+        socket.on("user_talking", ({ user_id })=>{
+            console.log(`${user_id} is talking`)
+            setTalkingRemoteUsers(new Set(talkingRemoteUsers.add(user_id)));
+        })
+
+        socket.on("user_not_talking", ({ user_id })=>{
+            const newSet = new Set(talkingRemoteUsers);
+            newSet.delete(user_id);
+            setTalkingRemoteUsers(newSet)
+        })
+
     };
 
     // join meeting
@@ -203,6 +215,18 @@ export default function Meeting() {
                 {Object.entries(remoteStreams).map(([id, stream]) => (
                     <video
                         key={id}
+                        style={{
+                            position: "relative",
+                            width: "100px",
+                            height: "100px",
+                            margin: "10px",
+                            borderRadius: "50%",
+                            border: `4px solid ${talkingRemoteUsers.has(id) ? "#3ba55d" : "transparent"}`, // Green border when talking
+                            boxShadow: isTalking ? "0 0 12px 4px #3ba55d" : "none", // Glow effect
+                            transition: "border-color 0.3s ease, box-shadow 0.3s ease",
+                        }}
+                    >
+                        <video
                         autoPlay
                         playsInline
                         ref={(ref) => {
