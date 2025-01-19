@@ -74,6 +74,7 @@ export default function Meeting() {
     const [meetingData, setMeetingData] = useState(null); // State to store the document data
 
     // useEffect oo listen for document changes
+
     useEffect(() => {
         const fetchMeetingDocumentId = async () => {
             try {
@@ -408,6 +409,7 @@ export default function Meeting() {
     if (status === "loading") {
         return <p>Loading...</p>;
     }
+
     const handleNextTopic = () => {
         if (!meetingData?.activities) {
             console.warn("No activities available");
