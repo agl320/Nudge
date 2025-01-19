@@ -4,15 +4,17 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NotFound from "./components/ui/NotFound/NotFound";
 import App from "./App";
 import { FirebaseProviders } from "./service/firebaseContext";
-import Register from "@/components/Register/Register"
+import Register from "@/components/Login/Register";
 import Login from "./components/Login/Login";
-import Meeting from "./meeting-page/Meeting";
+import Meeting from "./components/MeetingPage/Meeting";
+import MeetingHub from "./components/MeetingPage/MeetingHub";
 
 const router = createBrowserRouter([
-  { errorElement: <NotFound /> },
-  { path: "/", element: <Login /> },
-  { path: "/register", element: <Register /> },
-  { path: "/meeting/:meetingID", element: <Meeting /> },
+    { errorElement: <NotFound /> },
+    { path: "/", element: <Login /> },
+    { path: "/register", element: <Register /> },
+    { path: "/meeting/:meetingID", element: <Meeting /> },
+    { path: "/meeting/", element: <MeetingHub /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

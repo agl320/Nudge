@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
+import { UserSignOut } from "@/service/firebaseContext";
 
-function NavBar() {
+function NavBar({ user }: { user: User }) {
     return (
         <header>
-            <div className="flex justify-center w-full bg-white bg-opacity-[2%]">
+            <div className="flex justify-center w-full ">
                 <div className="flex justify-between text-white max-w-6xl w-full py-8">
                     <Link
                         to="/"
@@ -35,11 +36,25 @@ function NavBar() {
                             </li>
 
                             <li>
-                                <Button className="rounded-md bg-white">
-                                    <Link to="/app" className="text-black">
-                                        Log In
+                                {user ? (
+                                    <div className="flex gap-x-4">
+                                        <Link
+                                            to="/meeting"
+                                            className="text-black"
+                                        >
+                                            <Button className="rounded-md bg-white">
+                                                Meeting Hub
+                                            </Button>
+                                        </Link>
+                                        <UserSignOut />
+                                    </div>
+                                ) : (
+                                    <Link to="/" className="text-black">
+                                        <Button className="rounded-md bg-white">
+                                            Login
+                                        </Button>
                                     </Link>
-                                </Button>
+                                )}
                             </li>
                         </ul>
                     </div>
