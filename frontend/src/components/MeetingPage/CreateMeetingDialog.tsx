@@ -54,7 +54,8 @@ export default function CreateMeetingDialog({ isOpen, onClose }: { isOpen: boole
 
     console.log(generatedId);
 
-    const url = "/api/create_meeting";
+    // TODO : change base url when deploy
+    const url = "http://localhost:5555/api/create_meeting";
     const stateToSend = { ...meetingData, meeting_id: generatedId };
 
     try {
