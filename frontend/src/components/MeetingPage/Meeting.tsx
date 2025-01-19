@@ -2,10 +2,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import io from "socket.io-client";
 import VoiceRecorder from "@/audio";
+import InfoBar from "./InfoBar";
+
 import { Button } from "../ui/button";
 import { Slider } from "../ui/slider";
 import { useUser } from "reactfire";
 import { Separator } from "../ui/separator";
+
 
 const socket = io("http://127.0.0.1:5555");
 
@@ -247,6 +250,12 @@ export default function Meeting() {
     }
 
     return (
+      <div className="h-screen w-screen bg-black ">
+        <InfoBar 
+          meetingId={meetingID || ''} 
+          participantCount={Object.keys(remoteStreams).length} 
+        />
+  
         <div className="h-screen w-screen bg-black ">
             <div className="max-w-7xl mx-auto">
                 <h1>Meeting</h1>
@@ -342,5 +351,6 @@ export default function Meeting() {
                 </div>
             </div>
         </div>
+      </div>
     );
 }

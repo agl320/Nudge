@@ -1,4 +1,4 @@
-import { doc, getFirestore } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 import {
     getAuth,
     GoogleAuthProvider,
@@ -16,6 +16,7 @@ import {
 } from "reactfire";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
+import React from "react";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -28,10 +29,11 @@ const firebaseConfig = {
 };
 
 type ProviderProps = {
-    children: JSX.Element;
+    children: React.ReactNode;
 };
 
 export function FirebaseProviders({ children }: ProviderProps) {
+    console.log(firebaseConfig);
     return (
         <FirebaseAppProvider firebaseConfig={firebaseConfig}>
             <Wrappers>{children}</Wrappers>
