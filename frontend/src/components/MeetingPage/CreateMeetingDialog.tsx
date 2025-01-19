@@ -14,7 +14,6 @@ import { Label } from "../ui/label";
 import { PlusCircle, Trash2 } from "lucide-react";
 import ActivityDialog from "./ActivityDialog";
 import { useNavigate } from "react-router";
-import { IActivity } from "@/types/IActivity";
 import { useMeeting } from "@/service/meetingContext";
 
 interface IMeetingCreation {
@@ -32,7 +31,6 @@ interface IActivity {
     title: string;
     context: string[]; // LLM Generated
 }
-
 export default function CreateMeetingDialog({
     isOpen,
     onClose,
