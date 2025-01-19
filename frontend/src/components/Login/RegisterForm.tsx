@@ -83,13 +83,13 @@ export function RegisterForm({ setIsOnRegister }: RegisterFormProps) {
                 onSubmit={form.handleSubmit(onSubmitHandler)}
             >
                 <div className="space-y-2">
-                    <label className="block  text-sm">
+                    <label className="block text-sm">
                         <span className="text-green-400">$</span> Email
                     </label>
                     <Input
                         {...form.register("email")}
                         type="email"
-                        className="w-full"
+                        className="w-full border rounded-md text-white/75 text-sm"
                         placeholder="User@domain.com"
                     />
                 </div>

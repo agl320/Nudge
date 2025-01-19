@@ -1,19 +1,20 @@
-interface MeetingHeaderProps {
-  meetingId: string;
-  participantCount: number;
+import { cn } from "@/lib/utils"; // Optional: Utility function to merge classNames
+
+interface InfoRowProps {
+    label: string; // Label for the data (e.g., "Meeting ID")
+    value: string | number; // Value for the data (e.g., "12345")
+    className?: string; // Optional custom className for styling
 }
 
-export default function InfoBar({ meetingId, participantCount }: MeetingHeaderProps) {
-  return (
-    <div className="bg-zinc-800/50 rounded-lg p-3 mb-6 backdrop-blur-sm flex justify-between items-center">
-      <div className="flex items-center gap-3">
-        <span className="text-sm font-semibold">
-          Meeting ID: <span className="text-emerald-400">{meetingId}</span>
-        </span>
-      </div>
-      <div className="flex items-center gap-2">
-        <span className="text-xs text-zinc-400">Active Participants: {participantCount}</span>
-      </div>
-    </div>
-  );
+export default function InfoRow({ label, value, className }: InfoRowProps) {
+    return (
+        <div className={cn("flex items-center space-x-2", className)}>
+            <p className="text-xs font-medium">
+                <span className="text-green-400 bg-green-400/15 px-2 py-1 rounded-md whitespace-nowrap">
+                    $ {label}
+                </span>
+            </p>
+            <p className="ml-2 overflow-hidden truncate">{value}</p>
+        </div>
+    );
 }

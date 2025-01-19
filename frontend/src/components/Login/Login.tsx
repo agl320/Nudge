@@ -50,11 +50,11 @@ function Login() {
     }
 
     return (
-        <div className="bg-black bg-cover h-full w-screen">
-            <section className="flex flex-col flex-1 h-screen min-h-[900px] max-w-6xl mx-auto">
+        <div className="bg-black bg-cover h-full w-screen px-8">
+            <section className="flex flex-col flex-1 min-h-screen min-h-[900px] max-w-6xl mx-auto">
                 <NavBar user={user} />
                 <div className="lg:flex h-full justify-center">
-                    <div className="max-w-1/2 w-full my-8 bg-white/10  lg:mr-4 rounded-md flex flex-col justify-center">
+                    <div className="max-w-1/2 w-full my-8 bg-fade-bg lg:mr-4 rounded-md flex flex-col justify-center">
                         <section className="space-y-8 p-16 text-center">
                             <h1 className="text-4xl font-medium font-display">
                                 Nudge<span className="text-green-400">*</span>
@@ -89,12 +89,17 @@ function Login() {
                         </section>
                     </div>
                     <div className="max-w-1/2 w-full my-8 lg:ml-4 text-white rounded-md flex flex-col justify-center p-8 py-16">
-                        {isOnRegister && (
-                            <RegisterForm setIsOnRegister={setIsOnRegister} />
-                        )}
-                        {!isOnRegister && (
-                            <LoginForm setIsOnRegister={setIsOnRegister} />
-                        )}
+                        <div className="max-w-md mx-auto">
+                            {" "}
+                            {isOnRegister && (
+                                <RegisterForm
+                                    setIsOnRegister={setIsOnRegister}
+                                />
+                            )}
+                            {!isOnRegister && (
+                                <LoginForm setIsOnRegister={setIsOnRegister} />
+                            )}
+                        </div>
                     </div>
                 </div>
             </section>
