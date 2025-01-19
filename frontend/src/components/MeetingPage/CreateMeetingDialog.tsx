@@ -13,6 +13,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { PlusCircle, Trash2 } from "lucide-react";
 import ActivityDialog from "./ActivityDialog";
+import { useNavigate } from "react-router";
 
 interface IActivity {
     duration: number;
@@ -34,6 +35,7 @@ export default function CreateMeetingDialog({
     isOpen: boolean;
     onClose: () => void;
 }) {
+    const navigate = useNavigate();
     const initialMeetingState: IMeetingCreation = {
         role: "",
         setting: "",
@@ -68,8 +70,19 @@ export default function CreateMeetingDialog({
     };
 
     const handleSubmit = () => {
-        // check for meeting id exists
-        // navigate to meeting id
+        // Generate a 5-character alphanumeric case-sensitive string
+        const generatedId = Math.random().toString(36).substring(2, 7);
+
+        console.log(generatedId);
+
+        const stateToSend = { ...meetingData, id: generatedId };
+
+        // TODO
+
+        // ADD TO MEETING COLLECTION HERE
+
+        navigate(`/meeting/${generatedId}`);
+
         onClose(); // Close dialog after submission
     };
 
