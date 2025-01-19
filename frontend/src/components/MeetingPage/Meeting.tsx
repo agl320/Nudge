@@ -439,6 +439,8 @@ export default function Meeting() {
             meeting_id: meetingID,
             meeting_document_id: meetingDocumentId,
         };
+
+        console.log({ toSendObj });
     };
 
     console.log({ chatStream });

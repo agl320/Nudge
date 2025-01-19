@@ -93,12 +93,11 @@ export default function CreateMeetingDialog({
         const stateToSend = { ...meetingData, meeting_id: generatedId };
 
         try {
-            const response = fetch(url, {
+            fetch(url, {
                 method: "POST",
                 headers: {},
                 body: JSON.stringify(stateToSend),
-            });
-            console.log("response:", response);
+            }).then((res) => console.log("response:", res));
 
             const newMeeting: IMeetingCreation = {
                 meeting_id: stateToSend.meeting_id,
