@@ -1,12 +1,15 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import io from "socket.io-client";
 import VoiceRecorder from "@/audio";
+import { Button } from "../ui/button";
 
 const socket = io("http://127.0.0.1:5555");
 
 export default function Meeting() {
     const { meetingID } = useParams();
+
+    const navigate = useNavigate();
 
     const [remoteStreams, setRemoteStreams] = useState<{
         [key: string]: MediaStream;
@@ -146,6 +149,11 @@ export default function Meeting() {
                 return updatedStreams;
             });
         });
+
+        socket.on(
+            "outlier_detected",
+            ({ user_id, sentence }: { user_id: string; sentence: string }) => {}
+        );
     };
 
     // join meeting
@@ -167,6 +175,8 @@ export default function Meeting() {
         setRemoteStreams({});
         localStream.current?.getTracks().forEach((track) => track.stop());
         localStream.current = null;
+
+        navigate("/meeting");
     };
 
     const toggleMute = () => {
@@ -196,35 +206,49 @@ export default function Meeting() {
     }, []);
 
     return (
-        <div>
-            <h1>Meeting</h1>
-            <p>Meeting ID: {meetingID}</p>
-            <p>{Object.keys(remoteStreams).length} users in meeting</p>
-            <video
-                ref={localVideoRef}
-                autoPlay
-                muted
-                style={{ transform: "scaleX(-1)" }}
-            />
-            <div>
-                {Object.entries(remoteStreams).map(([id, stream]) => (
-                    <video
-                        key={id}
-                        autoPlay
-                        playsInline
-                        ref={(ref) => {
-                            if (ref && !ref.srcObject) {
-                                ref.srcObject = stream; // attach remote stream
-                            }
-                        }}
-                        style={{ transform: "scaleX(-1)" }}
-                    />
-                ))}
+        <div className="h-screen w-screen bg-black ">
+            <div className="max-w-7xl mx-auto">
+                <h1>Meeting</h1>
+                <p>Meeting ID: {meetingID}</p>
+                <p>{Object.keys(remoteStreams).length} users in meeting</p>
+                <video
+                    ref={localVideoRef}
+                    autoPlay
+                    muted
+                    style={{
+                        transform: "scaleX(-1)",
+                        width: "500px", // Limit width
+                        height: "auto", // Maintain aspect ratio
+                    }}
+                />
+                <div>
+                    {Object.entries(remoteStreams).map(([id, stream]) => (
+                        <video
+                            key={id}
+                            autoPlay
+                            playsInline
+                            ref={(ref) => {
+                                if (ref && !ref.srcObject) {
+                                    ref.srcObject = stream; // attach remote stream
+                                }
+                            }}
+                            style={{
+                                transform: "scaleX(-1)",
+                                width: "200px", // Limit width
+                                height: "200px", // Maintain aspect ratio
+                            }}
+                        />
+                    ))}
+                </div>
+                <div className="flex border border-white rounded-md p-2 mx-auto">
+                    <Button className="text-white" onClick={toggleMute}>
+                        {isAudioMuted ? "Unmute" : "Mute"}
+                    </Button>
+                    <Button className="text-white" onClick={leaveMeeting}>
+                        Leave Meeting
+                    </Button>
+                </div>
             </div>
-            <button onClick={leaveMeeting}>Leave Meeting</button>
-            <button onClick={toggleMute}>
-                {isAudioMuted ? "Unmute" : "Mute"}
-            </button>
         </div>
     );
 }
