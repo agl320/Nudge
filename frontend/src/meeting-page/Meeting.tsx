@@ -12,6 +12,7 @@ export default function Meeting() {
 
     const [remoteStreams, setRemoteStreams] = useState<{[key: string]: MediaStream;}>({}); // remote user streams
     const [isAudioMuted, setIsAudioMuted] = useState(false);
+    const [talkingRemoteUsers, setTalkingRemoteUsers] = useState<Set<string>>(new Set());
 
     const localVideoRef = useRef<HTMLVideoElement>(null); // local video element
     const peerConnections = useRef<{ [key: string]: RTCPeerConnection }>({}); // map user ID to RTCPeerConnection
@@ -213,7 +214,7 @@ export default function Meeting() {
             <video ref={localVideoRef} autoPlay muted style={{ transform: 'scaleX(-1)' }} />
             <div>
                 {Object.entries(remoteStreams).map(([id, stream]) => (
-                    <video
+                    <div
                         key={id}
                         style={{
                             position: "relative",
@@ -222,20 +223,21 @@ export default function Meeting() {
                             margin: "10px",
                             borderRadius: "50%",
                             border: `4px solid ${talkingRemoteUsers.has(id) ? "#3ba55d" : "transparent"}`, // Green border when talking
-                            boxShadow: isTalking ? "0 0 12px 4px #3ba55d" : "none", // Glow effect
+                            boxShadow: talkingRemoteUsers.has(id) ? "0 0 12px 4px #3ba55d" : "none", // Glow effect
                             transition: "border-color 0.3s ease, box-shadow 0.3s ease",
                         }}
                     >
                         <video
-                        autoPlay
-                        playsInline
-                        ref={(ref) => {
-                            if (ref && !ref.srcObject) {
-                                ref.srcObject = stream; // attach remote stream
-                            }
-                        }}
-                        style={{ transform: 'scaleX(-1)' }}
-                    />
+                            autoPlay
+                            playsInline
+                            ref={(ref) => {
+                                    if (ref && !ref.srcObject) {
+                                        ref.srcObject = stream; // attach remote stream
+                                    }
+                                }}
+                            style={{ transform: 'scaleX(-1)' }}
+                        />
+                    </div>
                 ))}
             </div>
             <button onClick={leaveMeeting}>Leave Meeting</button>
