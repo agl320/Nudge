@@ -1,3 +1,5 @@
 
 /backend/.venv
 frontend/.env
+.idea
+backend/model/Meta-Llama-3-8B-Instruct.Q4_1.gguf
