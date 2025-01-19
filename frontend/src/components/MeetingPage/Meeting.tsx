@@ -456,7 +456,14 @@ export default function Meeting() {
         return <p>Loading...</p>;
     }
 
-    if (!contextCreated) {
+    if (
+        !contextCreated &&
+        meetingData?.activities.filter(
+            (meetingItem) =>
+                !meetingItem.activities.contexts ||
+                !meetingItem.activities.contexts.length
+        )
+    ) {
         return <LoadingScreen user={user} />;
     }
 
