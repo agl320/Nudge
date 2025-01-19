@@ -10,7 +10,6 @@ import { Sparkle, Sparkles } from "lucide-react";
 
 function Login() {
     const { status, data: user } = useUser();
-    const navigate = useNavigate();
 
     if (status === "loading") {
         return <span>Loading...</span>;
