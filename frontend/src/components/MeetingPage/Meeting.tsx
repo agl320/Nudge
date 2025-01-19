@@ -319,17 +319,7 @@ export default function Meeting() {
         if (!meetingID) return; // require meeting ID
         await startLocalStream(); // start local video/audio
         await setupWebRTC(); // set up connections
-        socket.emit("join_meeting", { meeting_id: meetingID }); // notify server
-
-        // TODO FIX TRANSCRIPTION
-        socket.on("transcription", ({ timestamp, user_id, sentence }) => {
-            console.log("----------------------------------------");
-            console.log({ timestamp, user_id, sentence });
-            setChatStream((prev) => [
-                ...prev,
-                `[${timestamp}] User ${user_id} said: ${sentence}`,
-            ]);
-        });
+        socket.emit("join_meeting", { meeting_id: meetingID }); // notify server 
     };
 
     // leave meeting
@@ -373,6 +363,19 @@ export default function Meeting() {
 
     useEffect(() => {
         joinMeeting();
+        socket.on("transcription", (data) => {
+            console.log("----------------------------------------");
+            const { time_stamp, user_id, sentence } = data;
+            console.log({ time_stamp, user_id, sentence });
+            setChatStream((prev) => {
+                console.log(`[${time_stamp}] User ${user_id} said: ${sentence}`);
+                return [
+                    ...prev,
+                    `[${time_stamp}] User ${user_id} said: ${sentence}`,
+                ];
+            });
+        });
+        console.log("socket transcription listener", socket.listeners("transcription"));
         return removeSocketListeners;
     }, []);
 
