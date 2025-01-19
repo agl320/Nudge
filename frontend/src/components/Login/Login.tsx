@@ -6,8 +6,6 @@ import { useUser } from "reactfire";
 import { Sparkles } from "lucide-react";
 import { useState } from "react";
 import { RegisterForm } from "./RegisterForm";
-import { Separator } from "../ui/separator";
-import { GoogleSignIn } from "@/service/firebaseContext";
 
 function Login() {
     const { status, data: user } = useUser();
