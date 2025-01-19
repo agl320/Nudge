@@ -82,7 +82,7 @@ export function RegisterForm({ setIsOnRegister }: RegisterFormProps) {
             >
                 <div className="space-y-2">
                     <label className="block text-sm">
-                        <span className="text-green-400">$</span> Email
+                        <span className="text-green-500">$</span> Email
                     </label>
                     <Input
                         {...form.register("email")}
@@ -93,7 +93,7 @@ export function RegisterForm({ setIsOnRegister }: RegisterFormProps) {
                 </div>
                 <div className="space-y-2">
                     <label className="block  text-sm">
-                        <span className="text-green-400">$</span> Password
+                        <span className="text-green-500">$</span> Password
                     </label>
                     <Input
                         {...form.register("password")}
@@ -104,7 +104,7 @@ export function RegisterForm({ setIsOnRegister }: RegisterFormProps) {
                 </div>
                 <Button
                     type="submit"
-                    className="w-full bg-green-500 hover:bg-green-400 text-white "
+                    className="w-full bg-green-500 hover:bg-green-500 text-white "
                 >
                     Register
                 </Button>
@@ -126,11 +126,11 @@ export function RegisterForm({ setIsOnRegister }: RegisterFormProps) {
                 </div>
                 <div className="flex justify-center">
                     <span className="block  text-sm">
-                        <span className="text-green-400">{">"}</span> Already
+                        <span className="text-green-500">{">"}</span> Already
                         registered?{" "}
                         <Button
                             onClick={() => setIsOnRegister(false)}
-                            className="text-green-500 hover:text-green-400"
+                            className="text-green-500 hover:text-green-500"
                         >
                             Login
                         </Button>

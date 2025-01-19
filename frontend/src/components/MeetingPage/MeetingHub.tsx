@@ -62,13 +62,13 @@ function MeetingHub() {
                             </h1>
                             <div className="">
                                 <p className="text-white block rounded-md">
-                                    <span className="text-green-400 bg-green-400/15 px-2 py-1 rounded-md text-sm mr-4">
+                                    <span className="text-green-500 bg-green-500/15 px-2 py-1 rounded-md text-sm mr-4">
                                         $ user-uid{" "}
                                     </span>
                                     {user?.uid}
                                 </p>
                                 <p className="text-white block rounded-md mt-4">
-                                    <span className="text-green-400 bg-green-400/15 px-2 py-1 rounded-md text-sm mr-4">
+                                    <span className="text-green-500 bg-green-500/15 px-2 py-1 rounded-md text-sm mr-4">
                                         $ user-displayName{" "}
                                     </span>
                                     {user?.displayName}

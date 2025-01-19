@@ -10,7 +10,7 @@ export default function InfoRow({ label, value, className }: InfoRowProps) {
     return (
         <div className={cn("flex items-center space-x-2", className)}>
             <p className="text-xs font-medium">
-                <span className="text-green-400 bg-green-400/15 px-2 py-1 rounded-md whitespace-nowrap">
+                <span className="text-green-500 bg-green-500/15 px-2 py-1 rounded-md whitespace-nowrap">
                     $ {label}
                 </span>
             </p>

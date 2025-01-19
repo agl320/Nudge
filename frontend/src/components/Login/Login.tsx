@@ -65,7 +65,7 @@ function Login() {
                     <div className="max-w-1/2 w-full my-8 bg-fade-bg lg:mr-4 rounded-md flex flex-col justify-center">
                         <section className="space-y-8 p-16 text-center">
                             <h1 className="text-4xl font-medium font-display">
-                                Nudge<span className="text-green-400">*</span>
+                                Nudge<span className="text-green-500">*</span>
                             </h1>
                             <p className="mt-4 max-w-xs mx-auto">
                                 Prioritize meeting efficiency by optimizing
@@ -73,24 +73,24 @@ function Login() {
                             </p>
                             <div className="text-sm bg-fade inline-block p-4 rounded-md">
                                 <p className="mt-4 text-white/50">
-                                    <span className="text-green-400/50">
+                                    <span className="text-green-500/50">
                                         {">"}
                                     </span>{" "}
                                     Loading modules...
                                 </p>
                                 <p className="mt-4 text-white/70">
-                                    <span className="text-green-400/70">
+                                    <span className="text-green-500/70">
                                         {">"}
                                     </span>{" "}
                                     Optimizing meetings...
                                 </p>
                                 <p className="mt-4">
-                                    <span className="text-green-400">
+                                    <span className="text-green-500">
                                         {">"}
                                     </span>{" "}
                                     Cleaning up convos...
                                 </p>
-                                <p className="mt-4 text-green-400 font-bold">
+                                <p className="mt-4 text-green-500 font-bold">
                                     [ *_* ]
                                 </p>
                             </div>

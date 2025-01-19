@@ -7,7 +7,6 @@ import { User } from "@/types/User";
 function NavBar({ user }: { user: User | null }) {
     const { UserSignOut } = useUser();
 
-
     return (
         <header>
             <div className="flex justify-center w-full ">
@@ -17,7 +16,7 @@ function NavBar({ user }: { user: User | null }) {
                         className="text-5xl font-regular font-wide whitespace-nowrap"
                     >
                         <span className="text-white font-regular font-display">
-                            Nudge<span className="text-green-400">*</span>
+                            Nudge<span className="text-green-500">*</span>
                         </span>
                     </Link>
                     <div className=" gap-x-12 w-full flex-grow flex items-center w-auto text-center">
