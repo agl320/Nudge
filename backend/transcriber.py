@@ -16,7 +16,7 @@ class Transcriber:
             device = torch.device("cpu")
             print("MPS device not found.")
 
-        self.model = whisper.load_model("base")
+        self.model = whisper.load_model("small")
 
         try:
             self.model.to(device)
