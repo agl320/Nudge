@@ -29,13 +29,16 @@ function App() {
 
 
     return (
-        <divclassName="min-h-screen bg-black text-white flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-8">
-        {/* Header */}
-        <div className="text-center">
-          <h2 className="text-4xl font-bold tracking-tight">Welcome back</h2>
-          <p className="mt-2 text-sm text-gray-400">Sign in to your account to continue</p>
-        </div>
+        <div  className="min-h-screen bg-black text-white flex items-center justify-center p-4">
+            <div className="w-full max-w-md space-y-8">
+                <div className="text-center">
+                    <h2 className="text-4xl font-bold tracking-tight">
+                        Welcome back
+                    </h2>
+                    <p className="mt-2 text-sm text-gray-400">
+                        Sign in to your account to continue
+                    </p>
+                </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">

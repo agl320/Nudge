@@ -2,6 +2,8 @@ import { useParams } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import io from "socket.io-client";
 import VoiceRecorder from "@/audio";
+import InfoBar from "./InfoBar";
+import { Button } from "../ui/button";
 
 const socket = io("http://127.0.0.1:5555");
 
@@ -196,35 +198,48 @@ export default function Meeting() {
     }, []);
 
     return (
-        <div>
-            <h1>Meeting</h1>
-            <p>Meeting ID: {meetingID}</p>
-            <p>{Object.keys(remoteStreams).length} users in meeting</p>
-            <video
-                ref={localVideoRef}
+      <div className="h-screen w-screen bg-black ">
+        <InfoBar 
+          meetingId={meetingID || ''} 
+          participantCount={Object.keys(remoteStreams).length} 
+        />
+        <div className="max-w-7xl mx-auto">
+          <video
+            ref={localVideoRef}
+            autoPlay
+            muted
+            style={{
+              transform: "scaleX(-1)",
+              width: "500px", // Limit width
+              height: "auto", // Maintain aspect ratio
+            }}
+          />
+
+          <div>
+            {Object.entries(remoteStreams).map(([id, stream]) => (
+              <video
+                key={id}
                 autoPlay
-                muted
-                style={{ transform: "scaleX(-1)" }}
-            />
-            <div>
-                {Object.entries(remoteStreams).map(([id, stream]) => (
-                    <video
-                        key={id}
-                        autoPlay
-                        playsInline
-                        ref={(ref) => {
-                            if (ref && !ref.srcObject) {
-                                ref.srcObject = stream; // attach remote stream
-                            }
-                        }}
-                        style={{ transform: "scaleX(-1)" }}
-                    />
-                ))}
-            </div>
-            <button onClick={leaveMeeting}>Leave Meeting</button>
-            <button onClick={toggleMute}>
-                {isAudioMuted ? "Unmute" : "Mute"}
-            </button>
+                playsInline
+                ref={(ref) => {
+                  if (ref && !ref.srcObject) {
+                    ref.srcObject = stream; // attach remote stream
+                  }
+                }}
+                style={{
+                  transform: "scaleX(-1)",
+                  position: "relative",
+                  width: "100px",
+                  height: "100px",
+                  margin: "10px",
+                  borderRadius: "50%",
+                  border: `4px solid ${talkingRemoteUsers.has(id) ? "#3ba55d" : "transparent"}`, // Green border when talking
+                  transition: "border-color 0.3s ease, box-shadow 0.3s ease",
+                }}
+              />
+            ))}
+          </div>
         </div>
+      </div>
     );
 }
