@@ -130,15 +130,11 @@ export default function Meeting() {
     // retrieve document data
     useEffect(() => {
         const fetchMeetingData = async () => {
-            console.log(`MeetingID${meetingID}`)
+            console.log(`MeetingID: ${meetingID}`);
             if (meetingID) {
                 try {
                     // Reference the specific document in Firestore
-                    const meetingDocRef = doc(
-                        firestore,
-                        "meetings",
-                        meetingID
-                    );
+                    const meetingDocRef = doc(firestore, "meetings", meetingID);
 
                     // Fetch the document data
                     const meetingDoc = await getDoc(meetingDocRef);
@@ -147,10 +143,7 @@ export default function Meeting() {
                         console.log("DATA", { DATA: meetingDoc.data() });
                         setMeetingData(meetingDoc.data()); // Store the document data in state
                     } else {
-                        console.warn(
-                            "No document found for ID:",
-                            meetingID
-                        );
+                        console.warn("No document found for ID:", meetingID);
                     }
                 } catch (error) {
                     console.error(
@@ -482,6 +475,37 @@ export default function Meeting() {
         }
     };
 
+    useEffect(() => {
+        const getFirstTopic = () => {
+            const url = "http://localhost:5555/api/switch_activity";
+
+            // Prepare the object to send
+            const toSendObj = {
+                next_activity: meetingData.activities[0].title,
+                meeting_id: meetingID,
+                meeting_document_id: meetingDocumentId,
+            };
+
+            try {
+                fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(toSendObj),
+                }).then((res) => console.log("response:", res));
+
+                setOnTopic(meetingData.activities[0].title);
+            } catch (e: any) {
+                console.log("error:", e);
+            }
+        };
+
+        if (meetingData?.activities?.length > 0) {
+            getFirstTopic();
+        }
+    }, [meetingData, meetingID]); // Dependencies
+
     console.log({ chatStream });
 
     if (!user) {
@@ -492,12 +516,12 @@ export default function Meeting() {
         return <p>Loading...</p>;
     }
 
-    console.log(contextCreated,{ meetingData });
-    if (
-        !meetingData?.activities?.every((activity) => activity.context?.length > 0) 
-    ) {
-        return <LoadingScreen user={user} />;
-    }
+    console.log(contextCreated, { meetingData });
+    // if (
+    //     !meetingData?.activities?.every((activity) => activity.context?.length > 0)
+    // ) {
+    //     return <LoadingScreen user={user} />;
+    // }
 
     return (
         <div className="h-screen w-screen bg-black bg-cover overflow-x-hidden">
