@@ -11,16 +11,38 @@ function LoginFixed() {
             <section className="flex flex-col flex-1 h-screen min-h-[900px] max-w-6xl mx-auto">
                 <NavBar />
                 <div className="lg:flex h-full justify-center ">
-                    <div className="max-w-1/2 w-full my-8 bg-white/10  lg:mr-4 bg-gradient-to-r from-pastel-pink to-pastel-orange rounded-md flex flex-col justify-center">
+                    <div className="max-w-1/2 w-full my-8 bg-white/10  lg:mr-4 rounded-md flex flex-col justify-center">
                         <section className="space-y-8 p-16 text-center">
                             <h1 className="text-4xl font-medium font-display">
-                                Nudge*
+                                Nudge<span className="text-green-400">*</span>
                             </h1>
                             <p className="mt-4 max-w-xs mx-auto">
                                 Prioritize meeting efficiency by optimizing
                                 participant time.
                             </p>
-                            <p className="mt-4">[*_*]</p>
+                            <div className="text-sm bg-fade inline-block p-4 rounded-md">
+                                <p className="mt-4 text-white/50">
+                                    <span className="text-green-400/50">
+                                        {">"}
+                                    </span>{" "}
+                                    Loading modules...
+                                </p>
+                                <p className="mt-4 text-white/70">
+                                    <span className="text-green-400/70">
+                                        {">"}
+                                    </span>{" "}
+                                    Optimizing meetings...
+                                </p>
+                                <p className="mt-4">
+                                    <span className="text-green-400">
+                                        {">"}
+                                    </span>{" "}
+                                    Cleaning up convos...
+                                </p>
+                                <p className="mt-4 text-green-400 font-bold">
+                                    [ *_* ]
+                                </p>
+                            </div>
                         </section>
                     </div>
                     <div className="max-w-1/2 w-full my-8 lg:ml-4 text-white rounded-md flex flex-col justify-center p-8 py-16">
@@ -29,9 +51,8 @@ function LoginFixed() {
                                 <h2 className="text-2xl font-semibold">
                                     Welcome back
                                 </h2>
-                                <p className="">
-                                    Get back to collecting drinks from your
-                                    favourite menus
+                                <p className="bg-white/15 text-white/50 inline-block py-2 px-4 rounded-md text-sm">
+                                    $ sudo login-account --type=user
                                 </p>
                             </div>
                             <LoginForm />
@@ -53,10 +74,13 @@ function LoginFixed() {
                                 </div>
                                 <div className="flex justify-center">
                                     <span className="block">
+                                        <span className="text-green-400">
+                                            {">"}
+                                        </span>{" "}
                                         Need an account?{"\t"}
                                         <Link
                                             to="/register"
-                                            className="text-pastel-orange font-medium"
+                                            className="text-green-400 font-medium"
                                         >
                                             Register
                                         </Link>

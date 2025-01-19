@@ -7,6 +7,7 @@ export default {
             custom: "radial-gradient(62.87% 100% at 50% 100%, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 100%)",
             light: "linear-gradient(90deg, rgba(255,167,185,1) 0%, rgba(255,223,147,1) 100%)",
             logo: "url('/images/logo.png')",
+            fade: "linear-gradient(to top, rgba(255,255,255,0.05), transparent)",
         },
 
         extend: {

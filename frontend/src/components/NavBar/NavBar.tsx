@@ -12,7 +12,7 @@ function NavBar() {
                         className="text-5xl font-regular font-wide whitespace-nowrap"
                     >
                         <span className="text-white font-regular font-display">
-                            Nudge*
+                            Nudge<span className="text-green-400">*</span>
                         </span>
                     </Link>
                     <div className=" gap-x-12 w-full flex-grow flex items-center w-auto text-center">

@@ -40,12 +40,14 @@ function LoginForm() {
                     name="email"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>$ Email</FormLabel>
+                            <FormLabel>
+                                <span className="text-green-400">$</span> Email
+                            </FormLabel>
                             <FormControl>
                                 <Input
-                                    placeholder="Email"
+                                    placeholder="User@domain.com"
                                     {...field}
-                                    className="text-white"
+                                    className="text-white/75"
                                 />
                             </FormControl>
                         </FormItem>
@@ -57,20 +59,26 @@ function LoginForm() {
                     name="password"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Password</FormLabel>
+                            <FormLabel>
+                                <span className="text-green-400">$</span>{" "}
+                                Password
+                            </FormLabel>
                             <FormControl>
                                 <Input
                                     placeholder="Password"
                                     type="password"
                                     {...field}
-                                    className="text-white"
+                                    className="text-white/75"
                                 />
                             </FormControl>
                         </FormItem>
                     )}
                 />
 
-                <Button type="submit" className="bg-white text-black w-full">
+                <Button
+                    type="submit"
+                    className="bg-green-500 text-white w-full"
+                >
                     Log In
                 </Button>
             </form>
