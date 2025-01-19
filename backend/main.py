@@ -104,15 +104,19 @@ def handleUserNotTalking(data):
 def context_detection_worker():
     logger.info("Starting context detection worker")
     while True:
+        # stuff I can use directly
         timestamp, meeting_id, user_id, sentence = sentence_queue.get()
         detector = context_detectors.get(meeting_id)
         if not detector:
             context_detectors[meeting_id] = ContextualOutlierDetector()
             detector = context_detectors[meeting_id]
+        # outlier result
         is_outlier = detector.process_sentence(sentence)
         if is_outlier:
+            # TODO: Increment off topic bar
             logger.warning(f"Outlier detected for user {user_id} in meeting {meeting_id}: {sentence}")
             socketio.emit('outlier_detected', {'user_id': user_id, 'sentence': sentence}, room=meeting_id)
+        # TODO: else Decrement off topic bar
 
 
 if __name__ == '__main__':

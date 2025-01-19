@@ -2,12 +2,12 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NotFound from "./components/ui/NotFound/NotFound";
-import App from "./App";
 import { FirebaseProviders } from "./service/firebaseContext";
 import Register from "@/components/Login/Register";
 import Login from "./components/Login/Login";
 import Meeting from "./components/MeetingPage/Meeting";
 import MeetingHub from "./components/MeetingPage/MeetingHub";
+import { UserProvider } from "./service/userContext";
 
 const router = createBrowserRouter([
     { errorElement: <NotFound /> },
@@ -18,7 +18,9 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-    <FirebaseProviders>
-        <RouterProvider router={router} />
-    </FirebaseProviders>
+  <FirebaseProviders>
+    <UserProvider>
+      <RouterProvider router={router} />
+    </UserProvider>
+  </FirebaseProviders>
 );
