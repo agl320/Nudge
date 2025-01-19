@@ -50,10 +50,23 @@ def create_meeting():
 def initialize_context():
     data = request.json
     meeting_id = data.get('meeting_id')
-    next_activity = data.get('next_acitivity')
+    next_activity = data.get('next_activity')
     current_epoch_time = int(time.time())
     firebaseClientInstance.update_meeting(meeting_id, current_activity=next_activity, start_time=current_epoch_time)
-
+    # fetch new sample context for the next activity
+    meeting = firebaseClientInstance.get_meeting(meeting_id)
+    # find context to load, and push it into the context detector
+    activities = meeting.get('activities')
+    for activity in activities:
+        if activity.get('title') == next_activity:
+            print(f"Activity found: {activity}, {activity.get('title')}")
+            if meeting_id not in context_detectors:
+                context_detectors[meeting_id] = ContextualOutlierDetector()
+            print(f"Processing initial context for activity {activity.get('context')}")
+            for sentence in activity.get('context'):
+                context_detectors[meeting_id].process_sentence(sentence)
+            break
+    
     return jsonify({'message': 'Activity switched successfully'}), 200
 
 
