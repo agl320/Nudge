@@ -69,7 +69,7 @@ class VoiceRecorder {
 
             if (db > this.silenceThreshold) {
                 // Voice detected
-                console.log("voice detected")
+                //console.log("voice detected")
                 
                 if (this.mediaRecorder?.state === 'inactive') {
                     try {

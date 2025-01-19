@@ -351,6 +351,7 @@ export default function Meeting() {
 
     useEffect(() => {
         joinMeeting();
+        socket.on("context_created", () => console.log("context created"));
         socket.on("transcription", (data) => {
             console.log("----------------------------------------");
             const { time_stamp, user_id, sentence } = data;

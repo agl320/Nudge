@@ -186,6 +186,7 @@ def llm_worker():
         print(f"Fetched from queue, creating context for meeting {meeting_id}")
         llm.create_context(meeting_id, role, setting, activities)
         socketio.emit('context_created', room=meeting_id)
+        print("Context created emitted to ", meeting_id)
 
 
 if __name__ == '__main__':
