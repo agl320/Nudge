@@ -9,3 +9,4 @@ wave
 sounddevice
 scipy
 uvicorn
+sentence_transformers

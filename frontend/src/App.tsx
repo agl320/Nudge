@@ -27,8 +27,9 @@ function App() {
     console.log("Form submitted:", values);
   };
 
-  return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
+
+    return (
+        <divclassName="min-h-screen bg-black text-white flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
         {/* Header */}
         <div className="text-center">
