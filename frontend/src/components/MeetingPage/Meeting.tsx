@@ -3,10 +3,15 @@ import { useRef, useState, useEffect } from "react";
 import io from "socket.io-client";
 import VoiceRecorder from "@/audio";
 import { Button } from "../ui/button";
+import { Slider } from "../ui/slider";
+import { useUser } from "reactfire";
+import { Separator } from "../ui/separator";
 
 const socket = io("http://127.0.0.1:5555");
 
 export default function Meeting() {
+    const { status, data: user } = useUser();
+
     const { meetingID } = useParams();
 
     const navigate = useNavigate();
@@ -18,6 +23,12 @@ export default function Meeting() {
     const [talkingRemoteUsers, setTalkingRemoteUsers] = useState<Set<string>>(
         new Set()
     );
+
+    const [sliderValue, setSliderValue] = useState<number[]>([33]); // Initialize with default value
+
+    const handleChange = (value: number[]) => {
+        setSliderValue(value); // Update the state when the slider changes
+    };
 
     const localVideoRef = useRef<HTMLVideoElement>(null); // local video element
     const peerConnections = useRef<{ [key: string]: RTCPeerConnection }>({}); // map user ID to RTCPeerConnection
@@ -231,6 +242,10 @@ export default function Meeting() {
         return removeSocketListeners;
     }, []);
 
+    if (status === "loading") {
+        return <p>Loading...</p>;
+    }
+
     return (
         <div className="h-screen w-screen bg-black ">
             <div className="max-w-7xl mx-auto">
@@ -275,6 +290,55 @@ export default function Meeting() {
                             }}
                         />
                     ))}
+                </div>
+                <div className=" bg-white/10 border border-white/15 rounded-md p-2 mx-auto max-w-[400px] p-4 text-sm">
+                    <div className="">
+                        <p className="text-white block rounded-md">
+                            <span className="text-green-400">$ user-uid </span>
+                            {user?.uid}
+                        </p>
+                        <p className="text-white block rounded-md">
+                            <span className="text-green-400">
+                                $ user-displayName{" "}
+                            </span>
+                            {user?.displayName}
+                        </p>
+                    </div>
+                    <Separator className="w-full bg-white/15 my-4" />
+                    <div className="">
+                        <div className="flex justify-between">
+                            <p>
+                                <span className="text-green-400">$ set</span>{" "}
+                                voice-sensitivity
+                            </p>
+                            <p className="bg-green-500/25 text-green-500 px-2 py-1 rounded-md text-xs">
+                                {sliderValue}%
+                            </p>
+                        </div>
+
+                        <Slider
+                            className="mt-4"
+                            value={sliderValue} // Bind to state
+                            onValueChange={handleChange} // Update state on change
+                            max={100}
+                            step={1}
+                        />
+                    </div>
+
+                    <div className="flex mt-8">
+                        <Button
+                            className="text-black mr-2 bg-white w-1/2"
+                            onClick={toggleMute}
+                        >
+                            {isAudioMuted ? "Unmute" : "Mute"}
+                        </Button>
+                        <Button
+                            className="text-white bg-red-600 ml-2 w-1/2"
+                            onClick={leaveMeeting}
+                        >
+                            Leave Meeting
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
