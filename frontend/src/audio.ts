@@ -74,6 +74,7 @@ class VoiceRecorder {
                 if (this.mediaRecorder?.state === 'inactive') {
                     try {
                         console.log("recording started")
+                        this.socket.emit("user_talking", {meeting_id: this.meetingID})
                         this.mediaRecorder.start(100);
                     } catch (error) {
                         console.error('Failed to start MediaRecorder:', error);

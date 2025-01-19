@@ -87,6 +87,11 @@ def handleAudio(data):
     logger.info(f"Audio received from {user_id} in meeting {meeting_id} at {timestamp}")
     transcriber.audio_queue.put_nowait((timestamp, meeting_id, user_id, audio))  # pipeline starts, go to transcriber.py
 
+@socketio.on("user_talking")
+def handleUserTalking(data):
+    user_id = request.sid
+    meeting_id = data['meeting_id']
+    emit('user_talking', {'user_id': user_id}, room=meeting_id)
 
 def context_detection_worker():
     logger.info("Starting context detection worker")
