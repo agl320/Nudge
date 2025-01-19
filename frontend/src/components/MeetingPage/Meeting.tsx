@@ -24,6 +24,7 @@ import { useToast } from "@/hooks/use-toast";
 import MeetingInfo from "./MeetingInfo";
 import VideoSection from "./VideoSection";
 import ActivityLog from "./ActivityLog";
+import LoadingScreen from "./LoadingScreen";
 
 const socket = io("http://127.0.0.1:5555");
 
@@ -349,9 +350,11 @@ export default function Meeting() {
         socket.off("transcription");
     };
 
+    const [contextCreated, setContextCreated] = useState<boolean>(false);
+
     useEffect(() => {
         joinMeeting();
-        socket.on("context_created", () => console.log("context created"));
+        socket.on("context_created", () => setContextCreated(true));
         socket.on("transcription", (data) => {
             console.log("----------------------------------------");
             const { time_stamp, user_id, sentence } = data;
@@ -394,10 +397,6 @@ export default function Meeting() {
     const [onTopic, setOnTopic] = useState<string>(
         meetingData?.activities[0].label
     );
-
-    if (status === "loading") {
-        return <p>Loading...</p>;
-    }
 
     // TODO : send to backend
     const handleNextTopic = () => {
@@ -449,10 +448,16 @@ export default function Meeting() {
         }
     };
 
-    console.log({ chatStream });
-
     if (!user) {
         navigate("/");
+    }
+
+    if (status === "loading") {
+        return <p>Loading...</p>;
+    }
+
+    if (!contextCreated) {
+        return <LoadingScreen user={user} />;
     }
 
     return (
