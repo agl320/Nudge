@@ -21,6 +21,9 @@ import {
 } from "firebase/firestore";
 import { Toaster } from "../ui/toaster";
 import { useToast } from "@/hooks/use-toast";
+import MeetingInfo from "./MeetingInfo";
+import VideoSection from "./VideoSection";
+import ActivityLog from "./ActivityLog";
 
 const socket = io("http://127.0.0.1:5555");
 
@@ -29,42 +32,6 @@ interface SignalPayload {
     sdp?: RTCSessionDescriptionInit;
     candidate?: RTCIceCandidateInit;
 }
-
-const OnTopicDisplay = (
-    <>
-        <p className="text-green-500 font-bold bg-green-500/15 font-bold inline-block px-4 py-2 rounded-md">
-            ヽ(・∀・)ﾉ
-        </p>
-        <p className="mt-2">"( Discussion is running... )"</p>
-    </>
-);
-
-const NextTopicDisplay = (
-    <>
-        <p className="text-yellow-500 bg-yellow-500/15 font-bold inline-block px-4 py-2 rounded-md">
-            ＼(º □ º l|l)/
-        </p>
-        <p className="mt-2">{"( Proceed to next topic. )"}</p>
-    </>
-);
-
-const OffTopicDisplay = (
-    <>
-        <p className="text-red-500 bg-red-500/15 font-bold inline-block px-4 py-2 rounded-md">
-            ٩(ఠ益ఠ)۶
-        </p>
-        <p className="mt-2 text-white">{"( Convo is off topic! )"}</p>
-    </>
-);
-
-const IdleDisplay = (
-    <>
-        <p className="text-white bg-white/15 font-bold inline-block px-4 py-2 rounded-md">
-            ╮( ˘ ､ ˘ )╭
-        </p>
-        <p className="mt-2 text-white">{"( Nudge is Idle... )"}</p>
-    </>
-);
 
 export default function Meeting() {
     const { status, data: user } = useUser();
@@ -492,296 +459,29 @@ export default function Meeting() {
             <div className="h-full w-full bg-black max-w-full mx-auto flex flex-col flex-1 px-24">
                 <NavBar user={user} />
                 <div className="flex py-8 h-full">
-                    <div className="bg-white/10 border border-white/15 rounded-md p-2 mr-auto w-[700px] p-4 text-sm h-full flex flex-col justify-between">
-                        <div>
-                            <p className="text-white text-lg mb-4 font-semibold">
-                                Meeting
-                            </p>
-                            <Separator className="w-full bg-white/15 my-4" />
-                            <p className="text-md font-medium mb-4">
-                                Meeting info
-                            </p>
-                            <InfoBar
-                                label={"meeting-id"}
-                                value={meetingID || ""}
-                            />
-                            <InfoBar
-                                className="mt-4"
-                                label={"active-participants"}
-                                value={Object.keys(remoteStreams).length + 1}
-                            />
-                            <Separator className="w-full bg-white/15 my-4" />
-                            <p className="text-md font-medium mb-4">
-                                User info
-                            </p>
-                            <InfoBar
-                                label={" user-uid"}
-                                value={user?.uid ?? ""}
-                            />
-                            <InfoBar
-                                className="mt-4"
-                                label={"user-displayName"}
-                                value={user?.displayName ?? ""}
-                            />
-                            <Separator className="w-full bg-white/15 mb-4 mt-4" />
-                            <p className="text-md font-medium">Progress</p>
-                            <div className="w-full h-[250px] mt-4">
-                                {meetingData?.activities.map(
-                                    (timeBlock, index) => {
-                                        // Generate a color based on the index, scaling from orange to yellow
-                                        const colorScaler = (index, total) => {
-                                            const green = Math.round(
-                                                165 + (90 * index) / (total - 1)
-                                            ); // Green increases from 165 to 255
-                                            return `rgba(${green}, 255, 20, ${
-                                                onTopic === timeBlock.title
-                                                    ? "1"
-                                                    : "1"
-                                            })`; // RGB value for orange-to-yellow transition
-                                        };
-
-                                        return (
-                                            <div
-                                                style={{
-                                                    height: `${
-                                                        (timeBlock.duration /
-                                                            meetingData?.activities.reduce(
-                                                                (
-                                                                    sum,
-                                                                    activity
-                                                                ) =>
-                                                                    sum +
-                                                                    activity.duration,
-                                                                0
-                                                            )) *
-                                                        100
-                                                    }%`,
-                                                }}
-                                                className="flex w-full justify-between mb-2"
-                                            >
-                                                {onTopic === timeBlock.title ? (
-                                                    <ChevronRight
-                                                        style={{
-                                                            color: colorScaler(
-                                                                index,
-                                                                meetingData
-                                                                    ?.activities
-                                                                    .length
-                                                            ),
-                                                        }}
-                                                        className="w-6 h-6"
-                                                        strokeWidth={4}
-                                                    />
-                                                ) : (
-                                                    <ChevronRight
-                                                        style={{
-                                                            opacity: 0,
-                                                        }}
-                                                        className="w-6 h-6"
-                                                    />
-                                                )}
-                                                <div
-                                                    key={index} // Add a key to each element in the map
-                                                    style={{
-                                                        backgroundColor:
-                                                            colorScaler(
-                                                                index,
-                                                                meetingData
-                                                                    ?.activities
-                                                                    .length
-                                                            ),
-                                                    }}
-                                                    className="rounded-full pb-2 flex w-2 h-full pb-2 rounded-r-none"
-                                                ></div>
-                                                <div className="w-full h-full rounded-l-none">
-                                                    <div className=" flex h-full bg-white/10 px-2 py-1 rounded-md justify-between inline-block">
-                                                        <p className="">
-                                                            {timeBlock.title}
-                                                        </p>
-                                                        <p className="opacity-25">
-                                                            {(
-                                                                (timeBlock.duration /
-                                                                    meetingData?.activities.reduce(
-                                                                        (
-                                                                            sum,
-                                                                            activity
-                                                                        ) =>
-                                                                            sum +
-                                                                            activity.duration,
-                                                                        0
-                                                                    )) *
-                                                                100
-                                                            ).toFixed(1)}
-                                                            %
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        );
-                                    }
-                                )}
-                            </div>
-                            <div className="w-full flex mt-2">
-                                <Button
-                                    className="bg-green-500 text-white py-2 px-4 mt-8 w-1/2 mr-2"
-                                    onClick={handleNextTopic}
-                                >
-                                    Start Meeting
-                                </Button>
-                                <Button
-                                    className="bg-green-500 text-white py-2 px-4 mt-8 float-right w-1/2 ml-2"
-                                    onClick={handleNextTopic}
-                                >
-                                    Next topic <ChevronRight />
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="w-full px-8">
-                        <video
-                            ref={localVideoRef}
-                            autoPlay
-                            muted
-                            style={{
-                                transform: "scaleX(-1)",
-                                width: "auto", // Limit width
-                                height: "auto", // Maintain aspect ratio
-                            }}
-                            className="rounded-md"
-                        />
-
-                        <div className="flex mt-4">
-                            {displayedStreams.map(([id, stream], index) => (
-                                <video
-                                    key={id}
-                                    autoPlay
-                                    playsInline
-                                    ref={(ref) => {
-                                        if (ref && !ref.srcObject) {
-                                            ref.srcObject = stream;
-                                        }
-                                    }}
-                                    style={{
-                                        transform: "scaleX(-1)",
-                                        width: "33.3333%",
-                                        height: "auto",
-
-                                        transition:
-                                            "border-color 0.3s ease, box-shadow 0.3s ease",
-                                    }}
-                                    className={`rounded-lg m-2`}
-                                />
-                            ))}
-
-                            {/* Add placeholder divs for missing streams */}
-                            {Array.from({
-                                length: Math.max(
-                                    3 - displayedStreams.length,
-                                    0
-                                ),
-                            }).map((_, index) => (
-                                <div
-                                    key={`placeholder-${index}`}
-                                    style={{
-                                        width: "33.3333%",
-                                        height: "auto",
-                                        minHeight: "150px",
-                                        backgroundColor:
-                                            "rgba(255, 255, 255, 0.1)",
-                                    }}
-                                    className={`rounded-lg flex items-center justify-center m-2`}
-                                >
-                                    <p className="text-sm text-gray-500">
-                                        No Participant
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
-
-                        <div className="flex justify-between mt-4 ">
-                            <Button
-                                className="bg-white/15 h-auto border border-white/15"
-                                onClick={handleLeftClick}
-                            >
-                                <ArrowLeft />
-                            </Button>
-                            <div className="bg-white/15 h-auto w-full mx-4 rounded-md flex p-4 justify-center border border-white/15">
-                                <div className="w-full flex mr-6">
-                                    <div className="flex justify-between items-center ">
-                                        <p className="text-sm font-medium truncate">
-                                            Voice Sensitivity
-                                        </p>
-                                        <p className="bg-green-500/25 text-green-500 px-2 py-1 rounded-md text-xs truncate ml-4">
-                                            {sliderValue}%
-                                        </p>
-                                    </div>
-                                    <Slider
-                                        className="ml-4"
-                                        value={sliderValue} // Bind to state
-                                        onValueChange={handleChange} // Update state on change
-                                        max={100}
-                                        step={1}
-                                    />
-                                </div>
-                                <Button
-                                    className="text-black mr-2 bg-white"
-                                    onClick={toggleMute}
-                                >
-                                    {isAudioMuted ? (
-                                        <>
-                                            Unmute
-                                            <Mic />
-                                        </>
-                                    ) : (
-                                        <>
-                                            Mute
-                                            <MicOff />
-                                        </>
-                                    )}
-                                </Button>
-                                <Button
-                                    className="text-white ml-2 bg-red-500"
-                                    onClick={leaveMeeting}
-                                >
-                                    Leave Meeting
-                                </Button>
-                            </div>
-                            <Button
-                                className="bg-white/15 h-auto border border-white/15"
-                                onClick={handleRightClick}
-                            >
-                                <ArrowRight />
-                            </Button>
-                        </div>
-                    </div>
-                    <div className="bg-white/10 border border-white/15  rounded-md p-4 mr-auto w-[700px] h-full flex flex-col">
-                        <div>
-                            <p className="text-white text-lg mb-4 font-semibold">
-                                Activity
-                            </p>
-                            <Separator className="w-full bg-white/15 my-4" />
-
-                            <p className="text-md font-medium">Activity Log</p>
-                            <div className="h-[400px] w-full mt-4">
-                                <ScrollArea className="border-none bg-white/15 w-full max-w-full h-full rounded-md border p-4 overflow-auto [&_*]:font-mono">
-                                    {chatStream}
-                                </ScrollArea>
-                            </div>
-                        </div>
-                        <div className="w-full flex flex-grow rounded-md mt-4 justify-center bg-white/5 overflow-hidden">
-                            <div className="flex flex-col justify-center">
-                                <div className="text-center font-display text-2xl">
-                                    {IdleDisplay}
-                                </div>
-                            </div>
-                        </div>
-                        <Button
-                            className="text-white bg-green-500 w-full mt-4"
-                            onClick={leaveMeeting}
-                        >
-                            Pause Topic-Check
-                        </Button>
-                    </div>
+                    <MeetingInfo
+                        meetingID={meetingID}
+                        user={user}
+                        remoteStreams={remoteStreams}
+                        meetingData={meetingData}
+                        onTopic={onTopic}
+                        handleNextTopic={handleNextTopic}
+                    />
+                    <VideoSection
+                        localVideoRef={localVideoRef}
+                        displayedStreams={displayedStreams}
+                        handleLeftClick={handleLeftClick}
+                        handleRightClick={handleRightClick}
+                        sliderValue={sliderValue}
+                        handleChange={handleChange}
+                        toggleMute={toggleMute}
+                        leaveMeeting={leaveMeeting}
+                        isAudioMuted={isAudioMuted}
+                    />
+                    <ActivityLog
+                        chatStream={chatStream}
+                        leaveMeeting={leaveMeeting}
+                    />
                 </div>
             </div>
         </div>
