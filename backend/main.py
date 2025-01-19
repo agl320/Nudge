@@ -106,7 +106,7 @@ def leave_meeting(data):
     if meeting_id in meetings and not meetings[meeting_id]:
         del meetings[meeting_id]
         try:
-            FirebaseClient.delete_meeting(meeting_id)
+            firebaseClientInstance.delete_meeting(meeting_id)
         except Exception as e:
             logger.error(f"Error removing meeting {meeting_id} from Firestore: {str(e)}")
 
