@@ -13,7 +13,6 @@ import {
     ArrowLeft,
     ArrowRight,
     ChevronRight,
-    FlagTriangleRight,
     Mic,
     MicOff,
 } from "lucide-react";
@@ -29,28 +28,21 @@ import {
 
 const socket = io("http://127.0.0.1:5555");
 
-const exampleTimeBlockData = [
-    {
-        size: 0.2,
-        label: "Introduction",
-        duration: 20,
-    },
-    {
-        size: 0.5,
-        label: "Discussion",
-        duration: 50,
-    },
-    {
-        size: 0.3,
-        label: "Conclusion",
-        duration: 30,
-    },
-];
-
 interface SignalPayload {
     sender: string;
     sdp?: RTCSessionDescriptionInit;
     candidate?: RTCIceCandidateInit;
+}
+
+interface Activity {
+    title: string;
+    duration: number;
+}
+
+interface MeetingData {
+    activities: Activity[];
+    current_activity?: string;
+    meeting_id: string;
 }
 
 export default function Meeting() {
@@ -71,7 +63,7 @@ export default function Meeting() {
 
     const [meetingDocumentId, setMeetingDocumentId] = useState(null);
     const [loadingMeetingDoc, setLoadingMeetingDoc] = useState(true);
-    const [meetingData, setMeetingData] = useState(null); // State to store the document data
+    const [meetingData, setMeetingData] = useState<MeetingData | null>(null); // State to store the document data
 
     // useEffect oo listen for document changes
 
@@ -129,7 +121,7 @@ export default function Meeting() {
 
                     if (meetingDoc.exists()) {
                         console.log({ DATA: meetingDoc.data() });
-                        setMeetingData(meetingDoc.data()); // Store the document data in state
+                        setMeetingData(meetingDoc.data() as MeetingData); // Store the document data in state
                     } else {
                         console.warn(
                             "No document found for ID:",
@@ -150,7 +142,7 @@ export default function Meeting() {
 
     useEffect(() => {
         setOnTopic(
-            meetingData?.current_acitivity ?? meetingData?.activities[0].title
+            meetingData?.current_activity ?? meetingData?.activities?.[0].title
         );
     }, [meetingData]);
 
@@ -410,6 +402,7 @@ export default function Meeting() {
         return <p>Loading...</p>;
     }
 
+    // TODO : send to backend
     const handleNextTopic = () => {
         if (!meetingData?.activities) {
             console.warn("No activities available");
@@ -435,12 +428,24 @@ export default function Meeting() {
             return;
         }
 
+
+        const url = "http://localhost:5555/api/switch_activity"
         // Prepare the object to send
         const toSendObj = {
             next_activity: meetingData.activities[nextTopicIndex].title,
             meeting_id: meetingID,
             meeting_document_id: meetingDocumentId,
         };
+
+                try {
+                  fetch(url, {
+                    method: "POST",
+                    headers: {},
+                    body: JSON.stringify(toSendObj),
+                  }).then((res) => console.log("response:", res));
+                } catch (e: any) {
+                  console.log("error:", e);
+                }
 
         console.log({ toSendObj });
     };
