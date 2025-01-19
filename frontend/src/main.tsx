@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { MeetingProvider } from "./service/meetingContext";
 import NotFound from "./components/ui/NotFound/NotFound";
 import { FirebaseProviders } from "./service/firebaseContext";
 import Register from "@/components/Login/Register";
@@ -20,7 +21,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <FirebaseProviders>
     <UserProvider>
-      <RouterProvider router={router} />
+      <MeetingProvider>
+        <RouterProvider router={router} />
+      </MeetingProvider>
     </UserProvider>
   </FirebaseProviders>
 );

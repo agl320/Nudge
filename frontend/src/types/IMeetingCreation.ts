@@ -1,8 +1,10 @@
-interface IMeetingCreation {
-    // software engineer, etc.
-    role: string;
-    // what you are doing (activities, etc)
-    setting: string;
+import { IActivity } from "./IActivity"; 
 
-    activites: { duration: number; description: string; title: string }[];
+export interface IMeetingCreation {
+  meeting_id: string;
+  current_activity: string;
+  start_time: number; // (epoch time)
+  role: string;
+  setting: string;
+  activities: IActivity[];
 }

@@ -3,12 +3,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
+import { IActivity } from "@/types/IActivity";
 
-interface IActivity {
-    duration: number;
-    description: string;
-    title: string;
-}
 
 interface ActivityDialogProps {
     isOpen: boolean;
@@ -25,6 +21,7 @@ export default function ActivityDialog({
         duration: 0,
         description: "",
         title: "",
+        context: [],
     });
 
     const handleInputChange = (
