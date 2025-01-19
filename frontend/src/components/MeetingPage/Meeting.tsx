@@ -392,7 +392,7 @@ export default function Meeting() {
                 );
                 return [
                     ...prev,
-                    `[${time_stamp}] User ${user_id} said: ${sentence}`,
+                    { time_stamp, user_id, sentence },
                 ];
             });
         });
@@ -833,10 +833,12 @@ export default function Meeting() {
                                     <ScrollArea className="border-none bg-white/15 w-full max-w-full h-full rounded-md border p-4 overflow-auto [&_*]:font-mono">
                                   
                                     {chatStream.map((entry, index) => {
-                                        const isOutlier = entry.includes("Outlier:");
+                                        console.log(entry);
+                                        const {timestamp, user_id, sentence} = entry;
+                                        const isOutlier = sentence.includes("Outlier:");
                                         return (
                                             <p key={index} className={isOutlier ? "text-red-500 text-xs mb-4" : "text-xs mb-4"}>
-                                                {entry}
+                                                <span style={{opacity:"50%"}}>{new Date().toLocaleTimeString("en-GB")}</span> {sentence}
                                             </p>
                                         );
                                     })}
