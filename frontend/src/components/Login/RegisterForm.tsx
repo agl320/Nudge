@@ -58,7 +58,7 @@ export function RegisterForm({ setIsOnRegister }: RegisterFormProps) {
     }
 
     return (
-        <div className="rounded-lg p-8 backdrop-blur-sm">
+        <div className="rounded-lg px-8 backdrop-blur-sm">
             {message && (
                 <Alert
                     className={`mb-4 ${
@@ -72,10 +72,8 @@ export function RegisterForm({ setIsOnRegister }: RegisterFormProps) {
             )}
 
             <div className="text-center space-y-4 mb-8">
-                <h2 className="text-2xl ">
-                    <span className="text-green-400">$</span> Registration
-                </h2>
-                <p className=" text-sm opacity-75">
+                <h2 className="text-2xl font-medium">Start Saving Time</h2>
+                <p className=" text-sm opacity-75 bg-white/15 inline-block py-2 px-4 rounded-md">
                     $ sudo create-account --type=user
                 </p>
             </div>
@@ -91,7 +89,7 @@ export function RegisterForm({ setIsOnRegister }: RegisterFormProps) {
                     <Input
                         {...form.register("email")}
                         type="email"
-                        className="w-full bg-black border border-green-500/30 rounded px-4 py-2  text-white/75 text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                        className="w-full"
                         placeholder="User@domain.com"
                     />
                 </div>
@@ -102,7 +100,7 @@ export function RegisterForm({ setIsOnRegister }: RegisterFormProps) {
                     <Input
                         {...form.register("password")}
                         type="password"
-                        className="w-full bg-black border border-green-500/30 rounded px-4 py-2  text-white/75 text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                        className="w-full border rounded-md text-white/75 text-sm"
                         placeholder="Password"
                     />
                 </div>
@@ -117,11 +115,12 @@ export function RegisterForm({ setIsOnRegister }: RegisterFormProps) {
             <div className="space-y-8 mt-8">
                 <div className="flex justify-center">
                     <div className="flex flex-col justify-center">
-                        <Separator className="bg-green-500/30 w-[150px]" />
+                        <Separator className="bg-white/50 w-[150px]" />
                     </div>
-                    <p className="opacity-50 text-xs mx-2 ">OR</p>
+
+                    <p className="opacity-50 text-xs mx-2">OR</p>
                     <div className="flex flex-col justify-center">
-                        <Separator className="bg-green-500/30 w-[150px]" />
+                        <Separator className="bg-white/50 w-[150px]" />
                     </div>
                 </div>
                 <div className="flex justify-center">

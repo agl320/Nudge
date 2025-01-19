@@ -37,12 +37,10 @@ export default function LoginForm({ setIsOnRegister }: LoginFormProps) {
     }
 
     return (
-        <div className="rounded-lg p-8 backdrop-blur-sm">
+        <div className="rounded-lg px-8 backdrop-blur-sm">
             <div className="text-center space-y-4 mb-8">
-                <h2 className="text-2xl font-mono">
-                    <span className="text-green-400">$</span> System Access
-                </h2>
-                <p className="font-mono text-sm opacity-75">
+                <h2 className="text-2xl font-medium">Welcome Back</h2>
+                <p className=" text-sm opacity-75 bg-white/15 inline-block py-2 px-4 rounded-md">
                     $ authenticate --user --grant-access
                 </p>
             </div>
@@ -95,7 +93,7 @@ export default function LoginForm({ setIsOnRegister }: LoginFormProps) {
 
                     <Button
                         type="submit"
-                        className="bg-green-500 text-white w-full font-mono"
+                        className="bg-green-500 text-white w-full "
                     >
                         Login
                     </Button>
@@ -116,7 +114,7 @@ export default function LoginForm({ setIsOnRegister }: LoginFormProps) {
                     <GoogleSignIn />
                 </div>
                 <div className="flex justify-center">
-                    <span className="block">
+                    <span className="block text-sm">
                         <span className="text-green-400">{">"}</span> Need an
                         account?{"\t"}
                         <Button
