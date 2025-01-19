@@ -26,6 +26,8 @@ import {
     query,
     where,
 } from "firebase/firestore";
+import { Toaster } from "../ui/toaster";
+import { useToast } from "@/hooks/use-toast";
 
 const socket = io("http://127.0.0.1:5555");
 
@@ -52,6 +54,42 @@ interface SignalPayload {
     sdp?: RTCSessionDescriptionInit;
     candidate?: RTCIceCandidateInit;
 }
+
+const OnTopicDisplay = (
+    <>
+        <p className="text-green-500 font-bold bg-green-500/15 font-bold inline-block px-4 py-2 rounded-md">
+            ヽ(・∀・)ﾉ
+        </p>
+        <p className="mt-2">"( Discussion is running... )"</p>
+    </>
+);
+
+const NextTopicDisplay = (
+    <>
+        <p className="text-yellow-500 bg-yellow-500/15 font-bold inline-block px-4 py-2 rounded-md">
+            ＼(º □ º l|l)/
+        </p>
+        <p className="mt-2">{"( Proceed to next topic. )"}</p>
+    </>
+);
+
+const OffTopicDisplay = (
+    <>
+        <p className="text-red-500 bg-red-500/15 font-bold inline-block px-4 py-2 rounded-md">
+            ٩(ఠ益ఠ)۶
+        </p>
+        <p className="mt-2 text-white">{"( Convo is off topic! )"}</p>
+    </>
+);
+
+const IdleDisplay = (
+    <>
+        <p className="text-white bg-white/15 font-bold inline-block px-4 py-2 rounded-md">
+            ╮( ˘ ､ ˘ )╭
+        </p>
+        <p className="mt-2 text-white">{"( Nudge is Idle... )"}</p>
+    </>
+);
 
 export default function Meeting() {
     const { status, data: user } = useUser();
@@ -442,14 +480,29 @@ export default function Meeting() {
             meeting_document_id: meetingDocumentId,
         };
 
-        console.log({ toSendObj });
+        const url = "http://localhost:5555/api/switch_activity";
+
+        try {
+            fetch(url, {
+                method: "POST",
+                headers: {},
+                body: JSON.stringify(toSendObj),
+            }).then((res) => console.log("response:", res));
+
+            setOnTopic(meetingData.activities[nextTopicIndex].title);
+        } catch (e: any) {
+            console.log("error:", e);
+        }
     };
 
     console.log({ chatStream });
 
+    if (!user) {
+        navigate("/");
+    }
+
     return (
         <div className="h-screen w-screen bg-black bg-cover overflow-x-hidden">
-            <p>Meeting Document ID: {meetingDocumentId}</p>
             <div className="h-full w-full bg-black max-w-full mx-auto flex flex-col flex-1 px-24">
                 <NavBar user={user} />
                 <div className="flex py-8 h-full">
@@ -582,13 +635,20 @@ export default function Meeting() {
                                     }
                                 )}
                             </div>
-
-                            <Button
-                                className="bg-green-500 text-white py-2 px-4 mt-8 float-right"
-                                onClick={handleNextTopic}
-                            >
-                                Next topic <ChevronRight />
-                            </Button>
+                            <div className="w-full flex mt-2">
+                                <Button
+                                    className="bg-green-500 text-white py-2 px-4 mt-8 w-1/2 mr-2"
+                                    onClick={handleNextTopic}
+                                >
+                                    Start Meeting
+                                </Button>
+                                <Button
+                                    className="bg-green-500 text-white py-2 px-4 mt-8 float-right w-1/2 ml-2"
+                                    onClick={handleNextTopic}
+                                >
+                                    Next topic <ChevronRight />
+                                </Button>
+                            </div>
                         </div>
                     </div>
                     <div className="w-full px-8">
@@ -716,28 +776,25 @@ export default function Meeting() {
                             <Separator className="w-full bg-white/15 my-4" />
 
                             <p className="text-md font-medium">Activity Log</p>
-                            <div className="h-[300px] w-full mt-4">
+                            <div className="h-[400px] w-full mt-4">
                                 <ScrollArea className="border-none bg-white/15 w-full max-w-full h-full rounded-md border p-4 overflow-auto [&_*]:font-mono">
                                     {chatStream}
                                 </ScrollArea>
                             </div>
-                            <Button
-                                className="text-white bg-green-500 w-full mt-4"
-                                onClick={leaveMeeting}
-                            >
-                                Pause Topic-Check
-                            </Button>
                         </div>
                         <div className="w-full flex flex-grow rounded-md mt-4 justify-center bg-white/5 overflow-hidden">
-                            <div className="absolute relative top-0 flex flex-col justify-center">
+                            <div className="flex flex-col justify-center">
                                 <div className="text-center font-display text-2xl">
-                                    <p className="text-green-500 font-bold">
-                                        ヽ(・∀・)ﾉ
-                                    </p>
-                                    <p className="mt-2">You are on topic!</p>
+                                    {IdleDisplay}
                                 </div>
                             </div>
                         </div>
+                        <Button
+                            className="text-white bg-green-500 w-full mt-4"
+                            onClick={leaveMeeting}
+                        >
+                            Pause Topic-Check
+                        </Button>
                     </div>
                 </div>
             </div>
