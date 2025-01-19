@@ -145,16 +145,26 @@ export default function Meeting() {
             });
         });
 
-        socket.on("user_talking", ({ user_id })=>{
-            console.log(`${user_id} is talking`)
-            setTalkingRemoteUsers(new Set(talkingRemoteUsers.add(user_id)));
-        })
+        socket.on("user_talking", ({ user_id }) => {
+            console.log(`${user_id} is talking`);
+            setTalkingRemoteUsers((prev) => {
+                const newSet = new Set(prev);
+                newSet.add(user_id);
+                return newSet;
+            });
+            console.log(talkingRemoteUsers);
+        });
 
-        socket.on("user_not_talking", ({ user_id })=>{
-            const newSet = new Set(talkingRemoteUsers);
-            newSet.delete(user_id);
-            setTalkingRemoteUsers(newSet)
-        })
+        socket.on("user_not_talking", ({ user_id }) => {
+            console.log(`${user_id} is not talking`);
+            console.log(talkingRemoteUsers);
+            setTalkingRemoteUsers((prev) => {
+                const newSet = new Set(prev);
+                newSet.delete(user_id);
+                return newSet;
+            });
+            console.log(talkingRemoteUsers);
+        });
 
     };
 
@@ -198,6 +208,8 @@ export default function Meeting() {
         socket.off("user_joined");
         socket.off("signal");
         socket.off("user_left");
+        socket.off("user_talking");
+        socket.off("user_not_talking");
     }
 
     useEffect(() => {
@@ -214,20 +226,8 @@ export default function Meeting() {
             <video ref={localVideoRef} autoPlay muted style={{ transform: 'scaleX(-1)' }} />
             <div>
                 {Object.entries(remoteStreams).map(([id, stream]) => (
-                    <div
-                        key={id}
-                        style={{
-                            position: "relative",
-                            width: "100px",
-                            height: "100px",
-                            margin: "10px",
-                            borderRadius: "50%",
-                            border: `4px solid ${talkingRemoteUsers.has(id) ? "#3ba55d" : "transparent"}`, // Green border when talking
-                            boxShadow: talkingRemoteUsers.has(id) ? "0 0 12px 4px #3ba55d" : "none", // Glow effect
-                            transition: "border-color 0.3s ease, box-shadow 0.3s ease",
-                        }}
-                    >
                         <video
+                            key={id}
                             autoPlay
                             playsInline
                             ref={(ref) => {
@@ -235,9 +235,17 @@ export default function Meeting() {
                                         ref.srcObject = stream; // attach remote stream
                                     }
                                 }}
-                            style={{ transform: 'scaleX(-1)' }}
+                            style={{
+                                transform: 'scaleX(-1)',
+                                position: "relative",
+                                width: "100px",
+                                height: "100px",
+                                margin: "10px",
+                                borderRadius: "50%",
+                                border: `4px solid ${talkingRemoteUsers.has(id) ? "#3ba55d" : "transparent"}`, // Green border when talking
+                                transition: "border-color 0.3s ease, box-shadow 0.3s ease",
+                            }}
                         />
-                    </div>
                 ))}
             </div>
             <button onClick={leaveMeeting}>Leave Meeting</button>

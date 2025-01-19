@@ -104,7 +104,7 @@ class VoiceRecorder {
 
     stop() {
         this.isRecording = false;
-
+        this.socket.emit("user_not_talking", {meeting_id: this.meetingID});
         if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
             this.mediaRecorder.stop();
         }
