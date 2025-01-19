@@ -9,14 +9,7 @@ import { Slider } from "../ui/slider";
 import { useFirestore, useUser } from "reactfire";
 import { Separator } from "../ui/separator";
 import NavBar from "../NavBar/NavBar";
-import {
-    ArrowLeft,
-    ArrowRight,
-    ChevronRight,
-    FlagTriangleRight,
-    Mic,
-    MicOff,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronRight, Mic, MicOff } from "lucide-react";
 import { ScrollArea } from "../ui/scroll-area";
 import {
     collection,
@@ -30,24 +23,6 @@ import { Toaster } from "../ui/toaster";
 import { useToast } from "@/hooks/use-toast";
 
 const socket = io("http://127.0.0.1:5555");
-
-const exampleTimeBlockData = [
-    {
-        size: 0.2,
-        label: "Introduction",
-        duration: 20,
-    },
-    {
-        size: 0.5,
-        label: "Discussion",
-        duration: 50,
-    },
-    {
-        size: 0.3,
-        label: "Conclusion",
-        duration: 30,
-    },
-];
 
 interface SignalPayload {
     sender: string;
@@ -109,7 +84,7 @@ export default function Meeting() {
 
     const [meetingDocumentId, setMeetingDocumentId] = useState(null);
     const [loadingMeetingDoc, setLoadingMeetingDoc] = useState(true);
-    const [meetingData, setMeetingData] = useState(null); // State to store the document data
+    const [meetingData, setMeetingData] = useState<MeetingData | null>(null); // State to store the document data
 
     // useEffect oo listen for document changes
 
@@ -167,7 +142,7 @@ export default function Meeting() {
 
                     if (meetingDoc.exists()) {
                         console.log({ DATA: meetingDoc.data() });
-                        setMeetingData(meetingDoc.data()); // Store the document data in state
+                        setMeetingData(meetingDoc.data() as MeetingData); // Store the document data in state
                     } else {
                         console.warn(
                             "No document found for ID:",
@@ -188,7 +163,7 @@ export default function Meeting() {
 
     useEffect(() => {
         setOnTopic(
-            meetingData?.current_acitivity ?? meetingData?.activities[0].title
+            meetingData?.current_activity ?? meetingData?.activities?.[0].title
         );
     }, [meetingData]);
 
@@ -366,16 +341,6 @@ export default function Meeting() {
         await startLocalStream(); // start local video/audio
         await setupWebRTC(); // set up connections
         socket.emit("join_meeting", { meeting_id: meetingID }); // notify server
-
-        // TODO FIX TRANSCRIPTION
-        socket.on("transcription", ({ timestamp, user_id, sentence }) => {
-            console.log("----------------------------------------");
-            console.log({ timestamp, user_id, sentence });
-            setChatStream((prev) => [
-                ...prev,
-                `[${timestamp}] User ${user_id} said: ${sentence}`,
-            ]);
-        });
     };
 
     // leave meeting
@@ -419,6 +384,24 @@ export default function Meeting() {
 
     useEffect(() => {
         joinMeeting();
+        socket.on("transcription", (data) => {
+            console.log("----------------------------------------");
+            const { time_stamp, user_id, sentence } = data;
+            console.log({ time_stamp, user_id, sentence });
+            setChatStream((prev) => {
+                console.log(
+                    `[${time_stamp}] User ${user_id} said: ${sentence}`
+                );
+                return [
+                    ...prev,
+                    `[${time_stamp}] User ${user_id} said: ${sentence}`,
+                ];
+            });
+        });
+        console.log(
+            "socket transcription listener",
+            socket.listeners("transcription")
+        );
         return removeSocketListeners;
     }, []);
 
@@ -448,6 +431,7 @@ export default function Meeting() {
         return <p>Loading...</p>;
     }
 
+    // TODO : send to backend
     const handleNextTopic = () => {
         if (!meetingData?.activities) {
             console.warn("No activities available");
@@ -473,14 +457,14 @@ export default function Meeting() {
             return;
         }
 
+        const url = "http://localhost:5555/api/switch_activity";
+
         // Prepare the object to send
         const toSendObj = {
             next_activity: meetingData.activities[nextTopicIndex].title,
             meeting_id: meetingID,
             meeting_document_id: meetingDocumentId,
         };
-
-        const url = "http://localhost:5555/api/switch_activity";
 
         try {
             fetch(url, {

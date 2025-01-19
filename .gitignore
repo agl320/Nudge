@@ -1,5 +1,8 @@
 
 /backend/.venv
 frontend/.env
+backend/firebase_credentials.json
+backend/model/** 
+.idea/** 
 .idea
 backend/model/Meta-Llama-3-8B-Instruct.Q4_1.gguf
