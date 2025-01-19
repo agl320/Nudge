@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
+import { emailAndPasswordSignIn } from "@/service/firebaseContext";
 
 const formSchema = z.object({
     email: z.string().min(2).max(50),
@@ -26,7 +27,7 @@ function LoginForm() {
     });
 
     function onSubmitHandler(values: z.infer<typeof formSchema>) {
-        // doSignInWithEmailAndPassword(values.email, values.password);
+        emailAndPasswordSignIn(values.email, values.password);
     }
 
     return (
