@@ -1,23 +1,23 @@
 import { useParams } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import io from "socket.io-client";
-import VoiceRecorder from "../audio";
-import { join } from "path";
+import VoiceRecorder from "@/audio";
 
 const socket = io("http://127.0.0.1:5555");
 
 export default function Meeting() {
-
     const { meetingID } = useParams();
 
-    const [remoteStreams, setRemoteStreams] = useState<{[key: string]: MediaStream;}>({}); // remote user streams
+    const [remoteStreams, setRemoteStreams] = useState<{
+        [key: string]: MediaStream;
+    }>({}); // remote user streams
     const [isAudioMuted, setIsAudioMuted] = useState(false);
 
     const localVideoRef = useRef<HTMLVideoElement>(null); // local video element
     const peerConnections = useRef<{ [key: string]: RTCPeerConnection }>({}); // map user ID to RTCPeerConnection
     const localStream = useRef<MediaStream | null>(null); // local media stream
     const voiceRecorderRef = useRef<VoiceRecorder | null>(null);
-    
+
     // start local video/audio stream
     const startLocalStream = async () => {
         try {
@@ -29,7 +29,7 @@ export default function Meeting() {
             if (localVideoRef.current) {
                 localVideoRef.current.srcObject = stream; // attach stream to video element
             }
-            
+
             processAudio(stream);
         } catch (error) {
             console.error("Error accessing local media:", error);
@@ -37,10 +37,13 @@ export default function Meeting() {
     };
 
     const processAudio = async (stream: MediaStream) => {
-        voiceRecorderRef.current = new VoiceRecorder(stream, socket, meetingID || "")
+        voiceRecorderRef.current = new VoiceRecorder(
+            stream,
+            socket,
+            meetingID || ""
+        );
         voiceRecorderRef.current.start();
-    }
-
+    };
 
     // set up WebRTC connections
     const setupWebRTC = async () => {
@@ -179,26 +182,30 @@ export default function Meeting() {
             voiceRecorderRef.current?.stop();
             audioTrack.enabled = false;
         }
-    }
+    };
 
     const removeSocketListeners = () => {
         socket.off("user_joined");
         socket.off("signal");
         socket.off("user_left");
-    }
+    };
 
     useEffect(() => {
         joinMeeting();
         return removeSocketListeners;
-    }, [])
-
+    }, []);
 
     return (
         <div>
             <h1>Meeting</h1>
             <p>Meeting ID: {meetingID}</p>
             <p>{Object.keys(remoteStreams).length} users in meeting</p>
-            <video ref={localVideoRef} autoPlay muted style={{ transform: 'scaleX(-1)' }} />
+            <video
+                ref={localVideoRef}
+                autoPlay
+                muted
+                style={{ transform: "scaleX(-1)" }}
+            />
             <div>
                 {Object.entries(remoteStreams).map(([id, stream]) => (
                     <video
@@ -210,12 +217,14 @@ export default function Meeting() {
                                 ref.srcObject = stream; // attach remote stream
                             }
                         }}
-                        style={{ transform: 'scaleX(-1)' }}
+                        style={{ transform: "scaleX(-1)" }}
                     />
                 ))}
             </div>
             <button onClick={leaveMeeting}>Leave Meeting</button>
-            <button onClick={toggleMute}>{isAudioMuted ? "Unmute" : "Mute"}</button>
+            <button onClick={toggleMute}>
+                {isAudioMuted ? "Unmute" : "Mute"}
+            </button>
         </div>
     );
 }

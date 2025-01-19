@@ -1,11 +1,11 @@
 import { doc, getFirestore } from "firebase/firestore";
 import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    signOut,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
 } from "firebase/auth";
 import {
     FirebaseAppProvider,
@@ -86,7 +86,11 @@ export function UserSignOut() {
         }
     };
 
-    return <button onClick={handleSignOut}>Sign Out</button>;
+    return (
+        <Button className="bg-white text-black" onClick={handleSignOut}>
+            Sign Out
+        </Button>
+    );
 }
 
 export function UserSignIn() {
@@ -112,32 +116,39 @@ export async function emailAndPasswordSignIn(email: string, password: string) {
     const auth = getAuth();
 
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      console.log("Signed in user:", result.user.displayName);
+        const result = await signInWithEmailAndPassword(auth, email, password);
+        console.log("Signed in user:", result.user.displayName);
     } catch (error: any) {
-      console.error("Sign-in error:", error.message);
-      // Show error message to user
+        console.error("Sign-in error:", error.message);
+        // Show error message to user
     }
-    
 }
 
 export async function emailAndPasswordSignUp(email: string, password: string) {
-  const auth = getAuth();
+    const auth = getAuth();
 
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    return userCredential.user;
-  } catch (error) {
-    if (error instanceof Error) {
-      // Transform Firebase error messages to be more user-friendly
-      if (error.message.includes('email-already-in-use')) {
-        throw new Error('This email is already registered. Please try logging in instead.');
-      } else if (error.message.includes('invalid-email')) {
-        throw new Error('Please enter a valid email address.');
-      } else if (error.message.includes('weak-password')) {
-        throw new Error('Password should be at least 6 characters long.');
-      }
+    try {
+        const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+        return userCredential.user;
+    } catch (error) {
+        if (error instanceof Error) {
+            // Transform Firebase error messages to be more user-friendly
+            if (error.message.includes("email-already-in-use")) {
+                throw new Error(
+                    "This email is already registered. Please try logging in instead."
+                );
+            } else if (error.message.includes("invalid-email")) {
+                throw new Error("Please enter a valid email address.");
+            } else if (error.message.includes("weak-password")) {
+                throw new Error(
+                    "Password should be at least 6 characters long."
+                );
+            }
+        }
+        throw error;
     }
-    throw error;
-  }
 }

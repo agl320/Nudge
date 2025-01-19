@@ -1,11 +1,33 @@
-import { GoogleSignIn } from "@/service/firebaseContext";
+import { GoogleSignIn, UserSignOut } from "@/service/firebaseContext";
 import NavBar from "../NavBar/NavBar";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import LoginForm from "./LoginForm";
 import { Link } from "react-router";
+import { useUser } from "reactfire";
+import { useNavigate } from "react-router-dom";
 
 function LoginFixed() {
+    const { status, data: user } = useUser();
+    const navigate = useNavigate();
+
+    if (status === "loading") {
+        return <span>Loading...</span>;
+    }
+
+    // separate to another component later
+    if (user) {
+        return (
+            <div className="bg-black bg-cover h-full w-screen">
+                <section className="flex flex-col flex-1 h-screen min-h-[900px] max-w-6xl mx-auto">
+                    <NavBar />
+                    <p>Logged in as user: {user.uid}</p>
+                    <UserSignOut />
+                </section>
+            </div>
+        );
+    }
+
     return (
         <div className="bg-black bg-cover h-full w-screen">
             <section className="flex flex-col flex-1 h-screen min-h-[900px] max-w-6xl mx-auto">
