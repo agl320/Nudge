@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NotFound from "./components/ui/NotFound/NotFound";
 import App from "./App";
 import { FirebaseProviders } from "./service/firebaseContext";
-import Register from "@/components/Register/Register";
+import Register from "@/components/Login/Register";
 import Login from "./components/Login/Login";
 import Meeting from "./components/MeetingPage/Meeting";
 import MeetingHub from "./components/MeetingPage/MeetingHub";
