@@ -8,6 +8,12 @@ export default {
             light: "linear-gradient(90deg, rgba(255,167,185,1) 0%, rgba(255,223,147,1) 100%)",
             logo: "url('/images/logo.png')",
             fade: "linear-gradient(to top, rgba(255,255,255,0.05), transparent)",
+            "fade-rev":
+                "linear-gradient(to bottom, rgba(255,255,255,0.05), transparent)",
+            "fade-right":
+                "linear-gradient(to right, rgba(255,255,255,0.05), transparent)",
+            "fade-bg":
+                "linear-gradient(180deg, rgba(35, 35, 35, 0.25) 0%, rgba(18, 18, 18, 0.25) 42%, rgba(43,43,43,0.25) 81%, rgba(94, 94, 94, 0.25) 100%);",
         },
 
         extend: {

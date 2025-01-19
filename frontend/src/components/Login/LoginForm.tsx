@@ -10,9 +10,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { emailAndPasswordSignIn } from "@/service/firebaseContext";
 import { Separator } from "../ui/separator";
-import { GoogleSignIn, UserSignOut } from "@/service/firebaseContext";
+import { useUser } from "@/service/userContext";
 
 const formSchema = z.object({
     email: z.string().min(2).max(50),
@@ -24,6 +23,9 @@ interface LoginFormProps {
 }
 
 export default function LoginForm({ setIsOnRegister }: LoginFormProps) {
+    const { emailAndPasswordSignIn, GoogleSignIn } = useUser();
+
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {

@@ -1,9 +1,13 @@
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
-import { UserSignOut } from "@/service/firebaseContext";
+import { useUser } from "@/service/userContext";
+import { User } from "@/types/User";
 
-function NavBar({ user }: { user: User }) {
+function NavBar({ user }: { user: User | null }) {
+    const { UserSignOut } = useUser();
+
+
     return (
         <header>
             <div className="flex justify-center w-full ">

@@ -37,14 +37,14 @@ def create_meeting():
     role = data.get('role')
     setting = data.get('setting')
     activities = data.get('activities')
-    
+
     firebaseClientInstance.create_meeting(meeting_id, current_activity, start_time, role, setting, activities)
 
     # Use LLM to create the initial list of sentences to populate meeting context
     llm.queue.put((meeting_id, role, setting, activities))
-    
+
     return jsonify({'message': 'Meeting created successfully'}), 200
-    
+
 
 @app.route('/api/switch_activity', methods=['POST'])
 def initialize_context():
@@ -56,7 +56,7 @@ def initialize_context():
 
     return jsonify({'message': 'Activity switched successfully'}), 200
 
-    
+
 
 @socketio.on('join_meeting')
 def join_meeting(data):
@@ -146,16 +146,20 @@ def handleUserNotTalking(data):
 def context_detection_worker():
     logger.info("Starting context detection worker")
     while True:
+        # stuff I can use directly
         timestamp, meeting_id, user_id, sentence = sentence_queue.get()
-        emit("transcription", {'user_id': user_id, 'sentence': sentence}, room=meeting_id)
+        emit("transcription", {'time_stamp':timestamp,'user_id': user_id, 'sentence': sentence}, room=meeting_id)
         detector = context_detectors.get(meeting_id)
         if not detector:
             context_detectors[meeting_id] = ContextualOutlierDetector()
             detector = context_detectors[meeting_id]
+        # outlier result
         is_outlier = detector.process_sentence(sentence)
         if is_outlier:
+            # TODO: Increment off topic bar
             logger.warning(f"Outlier detected for user {user_id} in meeting {meeting_id}: {sentence}")
             socketio.emit('outlier_detected', {'user_id': user_id, 'sentence': sentence}, room=meeting_id)
+        # TODO: else Decrement off topic bar
 
 def llm_worker():
     logger.info("Starting LLM worker")

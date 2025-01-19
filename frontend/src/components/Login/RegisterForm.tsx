@@ -3,14 +3,11 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
-import {
-    GoogleSignIn,
-    emailAndPasswordSignUp,
-} from "@/service/firebaseContext";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "../ui/input";
+import { useUser } from "@/service/userContext";
 
 const formSchema = z.object({
     email: z.string().min(2).max(50),
@@ -23,6 +20,7 @@ interface RegisterFormProps {
 
 export function RegisterForm({ setIsOnRegister }: RegisterFormProps) {
     const navigate = useNavigate();
+    const { GoogleSignIn, emailAndPasswordSignUp } = useUser();
     const [message, setMessage] = useState<{
         type: "success" | "error";
         text: string;
@@ -36,7 +34,7 @@ export function RegisterForm({ setIsOnRegister }: RegisterFormProps) {
         },
     });
 
-    async function onSubmitHandler(values: z.infer<typeof formSchema>) {
+    const onSubmitHandler = async (values: z.infer<typeof formSchema>) => {
         try {
             await emailAndPasswordSignUp(values.email, values.password);
             setMessage({
@@ -55,7 +53,7 @@ export function RegisterForm({ setIsOnRegister }: RegisterFormProps) {
                         : "Registration failed. Please try again.",
             });
         }
-    }
+    };
 
     return (
         <div className="rounded-lg px-8 backdrop-blur-sm">
@@ -83,13 +81,13 @@ export function RegisterForm({ setIsOnRegister }: RegisterFormProps) {
                 onSubmit={form.handleSubmit(onSubmitHandler)}
             >
                 <div className="space-y-2">
-                    <label className="block  text-sm">
+                    <label className="block text-sm">
                         <span className="text-green-400">$</span> Email
                     </label>
                     <Input
                         {...form.register("email")}
                         type="email"
-                        className="w-full"
+                        className="w-full border rounded-md text-white/75 text-sm"
                         placeholder="User@domain.com"
                     />
                 </div>

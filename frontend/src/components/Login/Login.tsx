@@ -6,8 +6,6 @@ import { useUser } from "reactfire";
 import { Sparkles } from "lucide-react";
 import { useState } from "react";
 import { RegisterForm } from "./RegisterForm";
-import { Separator } from "../ui/separator";
-import { GoogleSignIn } from "@/service/firebaseContext";
 
 function Login() {
     const { status, data: user } = useUser();
@@ -24,16 +22,26 @@ function Login() {
                 <section className="flex flex-col flex-1 h-screen min-h-[900px] max-w-6xl mx-auto">
                     <NavBar user={user} />
 
-                    <div className="text-center mt-32 justify-center h-full">
+                    <div className="bg-fade-rev text-center pt-16 mt-16 justify-center h-full rounded-md">
                         <div className="space-y-8">
                             <p className="py-2 px-4 bg-white/15 text-white/50 inline-block rounded-md text-xs">
                                 $ Logged in as user: {user.uid}
                             </p>
 
-                            <h1 className="text-4xl font-medium">
+                            <h1 className="text-4xl font-medium font-display">
                                 Welcome back, {user.displayName}!
                             </h1>
-
+                            <p className="max-w-md mx-auto">
+                                Thanks for using{" "}
+                                <span className="font-bold">
+                                    Nudge
+                                    <span className="text-green-500">*</span>
+                                </span>
+                                . Join the{" "}
+                                <span className="font-bold">Meeting Hub</span>{" "}
+                                to begin creating meetings for you and your
+                                participants.
+                            </p>
                             <Link
                                 to="/meeting"
                                 className="block flex justify-center"
@@ -50,11 +58,11 @@ function Login() {
     }
 
     return (
-        <div className="bg-black bg-cover h-full w-screen">
-            <section className="flex flex-col flex-1 h-screen min-h-[900px] max-w-6xl mx-auto">
+        <div className="bg-black bg-cover h-full w-screen px-8">
+            <section className="flex flex-col flex-1 min-h-screen min-h-[900px] max-w-6xl mx-auto">
                 <NavBar user={user} />
                 <div className="lg:flex h-full justify-center">
-                    <div className="max-w-1/2 w-full my-8 bg-white/10  lg:mr-4 rounded-md flex flex-col justify-center">
+                    <div className="max-w-1/2 w-full my-8 bg-fade-bg lg:mr-4 rounded-md flex flex-col justify-center">
                         <section className="space-y-8 p-16 text-center">
                             <h1 className="text-4xl font-medium font-display">
                                 Nudge<span className="text-green-400">*</span>
@@ -89,12 +97,17 @@ function Login() {
                         </section>
                     </div>
                     <div className="max-w-1/2 w-full my-8 lg:ml-4 text-white rounded-md flex flex-col justify-center p-8 py-16">
-                        {isOnRegister && (
-                            <RegisterForm setIsOnRegister={setIsOnRegister} />
-                        )}
-                        {!isOnRegister && (
-                            <LoginForm setIsOnRegister={setIsOnRegister} />
-                        )}
+                        <div className="max-w-md mx-auto">
+                            {" "}
+                            {isOnRegister && (
+                                <RegisterForm
+                                    setIsOnRegister={setIsOnRegister}
+                                />
+                            )}
+                            {!isOnRegister && (
+                                <LoginForm setIsOnRegister={setIsOnRegister} />
+                            )}
+                        </div>
                     </div>
                 </div>
             </section>
