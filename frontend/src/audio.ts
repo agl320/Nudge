@@ -74,6 +74,7 @@ class VoiceRecorder {
                 if (this.mediaRecorder?.state === 'inactive') {
                     try {
                         console.log("recording started")
+                        this.socket.emit("user_talking", {meeting_id: this.meetingID})
                         this.mediaRecorder.start(100);
                     } catch (error) {
                         console.error('Failed to start MediaRecorder:', error);
@@ -88,6 +89,8 @@ class VoiceRecorder {
                 this.silenceTimeout = setTimeout(() => {
                     this.mediaRecorder!!.stop();
                     console.log("recording stopped")
+                    this.socket.emit("user_not_talking", {meeting_id: this.meetingID})
+                    console.log("user talking emitted")
                     this.convertAndEmit();
                 }, this.silenceDuration);
             }
@@ -101,7 +104,7 @@ class VoiceRecorder {
 
     stop() {
         this.isRecording = false;
-
+        this.socket.emit("user_not_talking", {meeting_id: this.meetingID});
         if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
             this.mediaRecorder.stop();
         }
