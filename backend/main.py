@@ -165,7 +165,6 @@ def context_detection_worker():
     while True:
         # stuff I can use directly
         timestamp, meeting_id, user_id, sentence = sentence_queue.get()
-        socketio.emit("transcription", {'time_stamp':timestamp,'user_id': user_id, 'sentence': sentence}, room=meeting_id)
         print("Transcription emitted to ", meeting_id)
         detector = context_detectors.get(meeting_id)
         if not detector:
@@ -176,7 +175,8 @@ def context_detection_worker():
         if is_outlier:
             # TODO: Increment off topic bar
             logger.warning(f"Outlier detected for user {user_id} in meeting {meeting_id}: {sentence}")
-            socketio.emit('outlier_detected', {'user_id': user_id, 'sentence': sentence}, room=meeting_id)
+            #socketio.emit('outlier_detected', {'user_id': user_id, 'sentence': sentence}, room=meeting_id)
+        socketio.emit("transcription", {'time_stamp':timestamp,'user_id': user_id, 'sentence': f"{'Outlier: ' if is_outlier else ''}{sentence}"}, room=meeting_id)
         # TODO: else Decrement off topic bar
 
 def llm_worker():

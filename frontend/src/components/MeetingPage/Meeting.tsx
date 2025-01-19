@@ -81,7 +81,7 @@ export default function Meeting() {
         new Set()
     );
     const [sliderValue, setSliderValue] = useState<number[]>([33]); // Initialize with default value
-    const [chatStream, setChatStream] = useState<string[]>([]);
+    const [chatStream, setChatStream] = useState<any>([]);
 
     const [meetingDocumentId, setMeetingDocumentId] = useState(null);
     const [loadingMeetingDoc, setLoadingMeetingDoc] = useState(true);
@@ -517,6 +517,7 @@ export default function Meeting() {
     }
 
     console.log(contextCreated, { meetingData });
+    console.log(chatStream)
 
     return (
         <>
@@ -830,7 +831,15 @@ export default function Meeting() {
                                 </p>
                                 <div className="h-[400px] w-full mt-4">
                                     <ScrollArea className="border-none bg-white/15 w-full max-w-full h-full rounded-md border p-4 overflow-auto [&_*]:font-mono">
-                                        {chatStream}
+                                  
+                                    {chatStream.map((entry, index) => {
+                                        const isOutlier = entry.includes("Outlier:");
+                                        return (
+                                            <p key={index} className={isOutlier ? "text-red-500 text-xs mb-4" : "text-xs mb-4"}>
+                                                {entry}
+                                            </p>
+                                        );
+                                    })}
                                     </ScrollArea>
                                 </div>
                             </div>
