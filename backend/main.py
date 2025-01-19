@@ -173,6 +173,7 @@ def context_detection_worker():
             detector = context_detectors[meeting_id]
         # outlier result
         is_outlier = detector.process_sentence(sentence)
+        socketio.emit('emoji_status', {'is_outlier': is_outlier}, room=meeting_id)
         if is_outlier:
             # TODO: Increment off topic bar
             logger.warning(f"Outlier detected for user {user_id} in meeting {meeting_id}: {sentence}")
