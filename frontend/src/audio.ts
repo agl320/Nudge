@@ -22,7 +22,7 @@ class VoiceRecorder {
         this.isRecording = false;
         this.silenceTimeout = null;
         this.silenceThreshold = -45; // dB
-        this.silenceDuration = 1000; // ms
+        this.silenceDuration = 600; // ms
         this.onDataAvailable = null;
         this.meetingID = meetingID;
     }
