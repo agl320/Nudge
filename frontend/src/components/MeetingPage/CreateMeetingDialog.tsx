@@ -93,7 +93,7 @@ export default function CreateMeetingDialog({
         try {
             fetch(url, {
                 method: "POST",
-                headers: {},
+                headers: {"Content-Type": "application/json",},
                 body: JSON.stringify(stateToSend),
             }).then((res) => console.log("response:", res));
 

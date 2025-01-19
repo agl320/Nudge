@@ -469,7 +469,9 @@ export default function Meeting() {
         try {
             fetch(url, {
                 method: "POST",
-                headers: {},
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify(toSendObj),
             }).then((res) => console.log("response:", res));
 

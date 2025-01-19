@@ -9,6 +9,7 @@ from firebase import firebaseClientInstance
 from firebase import FirebaseClient
 import threading
 import time
+from flask_cors import CORS
 
 
 # Configure logging
@@ -16,6 +17,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(app, cors_allowed_origins="*", max_http_buffer_size=10**8, async_mode='threading')
 socketio.init_app(app)
 
@@ -48,6 +50,7 @@ def create_meeting():
 
 @app.route('/api/switch_activity', methods=['POST'])
 def initialize_context():
+    print(request)
     data = request.json
     meeting_id = data.get('meeting_id')
     next_activity = data.get('next_activity')
@@ -57,6 +60,7 @@ def initialize_context():
     meeting = firebaseClientInstance.get_meeting(meeting_id)
     # find context to load, and push it into the context detector
     activities = meeting.get('activities')
+    print(activities)
     for activity in activities:
         if activity.get('title') == next_activity:
             print(f"Activity found: {activity}, {activity.get('title')}")
@@ -181,6 +185,7 @@ def llm_worker():
         meeting_id, role, setting, activities = llm.queue.get()
         print(f"Fetched from queue, creating context for meeting {meeting_id}")
         llm.create_context(meeting_id, role, setting, activities)
+        socketio.emit('context_created', room=meeting_id)
 
 
 if __name__ == '__main__':
