@@ -12,6 +12,7 @@ export default function Meeting() {
         [key: string]: MediaStream;
     }>({}); // remote user streams
     const [isAudioMuted, setIsAudioMuted] = useState(false);
+    const [talkingRemoteUsers, setTalkingRemoteUsers] = useState<Set<string>>(new Set());
 
     const localVideoRef = useRef<HTMLVideoElement>(null); // local video element
     const peerConnections = useRef<{ [key: string]: RTCPeerConnection }>({}); // map user ID to RTCPeerConnection
@@ -146,6 +147,28 @@ export default function Meeting() {
                 return updatedStreams;
             });
         });
+
+        socket.on("user_talking", ({ user_id }) => {
+            console.log(`${user_id} is talking`);
+            setTalkingRemoteUsers((prev) => {
+                const newSet = new Set(prev);
+                newSet.add(user_id);
+                return newSet;
+            });
+            console.log(talkingRemoteUsers);
+        });
+
+        socket.on("user_not_talking", ({ user_id }) => {
+            console.log(`${user_id} is not talking`);
+            console.log(talkingRemoteUsers);
+            setTalkingRemoteUsers((prev) => {
+                const newSet = new Set(prev);
+                newSet.delete(user_id);
+                return newSet;
+            });
+            console.log(talkingRemoteUsers);
+        });
+
     };
 
     // join meeting
@@ -188,6 +211,8 @@ export default function Meeting() {
         socket.off("user_joined");
         socket.off("signal");
         socket.off("user_left");
+        socket.off("user_talking");
+        socket.off("user_not_talking");
     };
 
     useEffect(() => {
@@ -208,17 +233,26 @@ export default function Meeting() {
             />
             <div>
                 {Object.entries(remoteStreams).map(([id, stream]) => (
-                    <video
-                        key={id}
-                        autoPlay
-                        playsInline
-                        ref={(ref) => {
-                            if (ref && !ref.srcObject) {
-                                ref.srcObject = stream; // attach remote stream
-                            }
-                        }}
-                        style={{ transform: "scaleX(-1)" }}
-                    />
+                        <video
+                            key={id}
+                            autoPlay
+                            playsInline
+                            ref={(ref) => {
+                                    if (ref && !ref.srcObject) {
+                                        ref.srcObject = stream; // attach remote stream
+                                    }
+                                }}
+                            style={{
+                                transform: 'scaleX(-1)',
+                                position: "relative",
+                                width: "100px",
+                                height: "100px",
+                                margin: "10px",
+                                borderRadius: "50%",
+                                border: `4px solid ${talkingRemoteUsers.has(id) ? "#3ba55d" : "transparent"}`, // Green border when talking
+                                transition: "border-color 0.3s ease, box-shadow 0.3s ease",
+                            }}
+                        />
                 ))}
             </div>
             <button onClick={leaveMeeting}>Leave Meeting</button>
