@@ -24,16 +24,26 @@ function Login() {
                 <section className="flex flex-col flex-1 h-screen min-h-[900px] max-w-6xl mx-auto">
                     <NavBar user={user} />
 
-                    <div className="text-center mt-32 justify-center h-full">
+                    <div className="bg-fade-rev text-center pt-16 mt-16 justify-center h-full rounded-md">
                         <div className="space-y-8">
                             <p className="py-2 px-4 bg-white/15 text-white/50 inline-block rounded-md text-xs">
                                 $ Logged in as user: {user.uid}
                             </p>
 
-                            <h1 className="text-4xl font-medium">
+                            <h1 className="text-4xl font-medium font-display">
                                 Welcome back, {user.displayName}!
                             </h1>
-
+                            <p className="max-w-md mx-auto">
+                                Thanks for using{" "}
+                                <span className="font-bold">
+                                    Nudge
+                                    <span className="text-green-500">*</span>
+                                </span>
+                                . Join the{" "}
+                                <span className="font-bold">Meeting Hub</span>{" "}
+                                to begin creating meetings for you and your
+                                participants.
+                            </p>
                             <Link
                                 to="/meeting"
                                 className="block flex justify-center"
