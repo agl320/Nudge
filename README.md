@@ -5,7 +5,7 @@ Users can schedule meetings, define time blocks, and set specific topics for str
  
 Built with peer-to-peer services and WebRTC, it streams audio batches to a Flask backend via WebSockets. A locally embedded Llama 3 instance is then used to generate sentences that are very likely to be included into the meeting. The information is then used by our sentence transformer to produce a vector which represents the sentences in a mathematical way. These vectors are then compared together using cosine similarity which determines the on-topicness of the users.
 
-Quick demo of on topic check (does not show the schedule or other feature functionality)
+Quick demo of on topic check (does not show the schedule or functionality of other features because we were submitted last minute)
 https://www.youtube.com/watch?v=pD73LgNNiEw
 
 Devpost page
