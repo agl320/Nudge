@@ -1,5 +1,7 @@
 # Nudge
-Nudge is our project for nwHacks 2025, LLM track finalist. Nudge offers a convenient meeting solution designed to enhance efficiency by analyzing speech in real time to determine if discussions are on-topic, issuing warnings when necessary, and providing statistical insights to further improve meeting productivity.
+Nudge is our project for nwHacks 2025, LLM track finalist. 
+
+Nudge offers a convenient meeting solution designed to enhance efficiency by analyzing speech in real time to determine if discussions are on-topic, issuing warnings when necessary, and providing statistical insights to further improve meeting productivity. We aim to save companies money, as well as employees time, as meetings often drag out for prolonged amounts of time, and derail from the main topic as meeting time progresses.
 
 Users can schedule meetings, define time blocks, and set specific topics for structured and efficient discussions, ensuring every meeting stays focused and productive.
  
