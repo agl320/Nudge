@@ -1,20 +1,61 @@
 # Nudge
-Nudge is our project for nwHacks 2025, LLM track finalist. 
 
-Nudge offers a convenient meeting solution designed to enhance efficiency by analyzing speech in real time to determine if discussions are on-topic, issuing warnings when necessary, and providing statistical insights to further improve meeting productivity. We aim to save companies money, as well as employees time, as meetings often drag out for prolonged amounts of time, and derail from the main topic as meeting time progresses.
+Nudge is an intelligent meeting assistant that keeps discussions on track. Powered by AI and real-time speech analysis, Nudge helps teams maximize productivity and minimize wasted time.
 
-Users can schedule meetings, define time blocks, and set specific topics for structured and efficient discussions, ensuring every meeting stays focused and productive.
- 
-Built with peer-to-peer services and WebRTC, it streams audio batches to a Flask backend via WebSockets. A locally embedded Llama 3 instance is then used to generate sentences that are very likely to be included into the meeting. The information is then used by our sentence transformer to produce a vector which represents the sentences in a mathematical way. These vectors are then compared together using cosine similarity which determines the on-topicness of the users.
+**nwHacks 2025** — LLM Track Finalist
 
-Quick demo of on topic check (does not show the schedule or functionality of other features because we were submitted last minute)
-https://www.youtube.com/watch?v=pD73LgNNiEw
+---
 
-Devpost page
-https://devpost.com/software/nudge-1lf8dr
+## 🎯 Overview
 
-Graphics
+Meetings often derail from their core objectives, wasting valuable company resources and employee time. Nudge solves this problem by:
+
+- **Real-time topic detection** — Analyzes speech to determine if discussions stay on-topic
+- **Smart notifications** — Issues warnings when the conversation drifts
+- **Productivity insights** — Provides statistical analysis to improve future meetings
+- **Structured planning** — Schedule meetings, define time blocks, and set specific topics
+
+With Nudge, organizations save money while employees reclaim productivity.
+
+---
+
+## 🛠️ Technical Architecture
+
+Nudge combines cutting-edge technologies for efficient meeting analysis:
+
+- **Frontend**: React + TypeScript with real-time WebRTC video streaming
+- **Backend**: Flask with WebSocket support for audio processing
+- **AI Model**: Locally embedded Llama 3 for sentence generation and topic analysis
+- **Vector Processing**: Sentence Transformers for semantic representations
+- **Similarity Matching**: Cosine similarity algorithms for on-topic detection
+
+**How it works:**
+1. Audio batches are streamed via WebRTC to the Flask backend
+2. Llama 3 generates candidate sentences likely to appear in the meeting
+3. Sentence Transformer converts text to mathematical vectors
+4. Cosine similarity compares vectors to determine topic relevance
+5. Real-time feedback keeps discussions focused
+
+---
+
+## 📹 Demo & Resources
+
+**Quick Demo** — [YouTube: On-Topic Check Demo](https://www.youtube.com/watch?v=pD73LgNNiEw)  
+*(Note: Demo focuses on core feature; schedule and extended features added after submission)*
+
+**Project Page** — [Devpost Submission](https://devpost.com/software/nudge-1lf8dr)
+
+---
+
+## 🎨 Graphics
+
 ![nudge_logo2](https://github.com/user-attachments/assets/17892133-2fe5-486d-9c48-c0ac61e3ab77)
 ![nudge_slide2](https://github.com/user-attachments/assets/59f6b29a-0497-443b-9076-1d3fc42905d6)
 ![nudge_slide4](https://github.com/user-attachments/assets/871af16e-bf00-4e31-a170-eba261cc0f37)
 ![nudge_slide3](https://github.com/user-attachments/assets/fcc0afc2-07e2-4547-b4b6-6314d5d2e20c)
+
+---
+
+## 👥 Contributors
+
+**M T**
