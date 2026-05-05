@@ -58,4 +58,4 @@ Nudge combines cutting-edge technologies for efficient meeting analysis:
 
 ## 👥 Contributors
 
-**M T**
+**MIT**
