@@ -6,7 +6,7 @@ Nudge is an intelligent meeting assistant that keeps discussions on track. Power
 
 ---
 
-## 🎯 Overview
+## Overview
 
 Meetings often derail from their core objectives, wasting valuable company resources and employee time. Nudge solves this problem by:
 
@@ -19,7 +19,7 @@ With Nudge, organizations save money while employees reclaim productivity.
 
 ---
 
-## 🛠️ Technical Architecture
+## Technical Architecture
 
 Nudge combines cutting-edge technologies for efficient meeting analysis:
 
@@ -38,7 +38,7 @@ Nudge combines cutting-edge technologies for efficient meeting analysis:
 
 ---
 
-## 📹 Demo & Resources
+## Demo & Resources
 
 **Quick Demo** — [YouTube: On-Topic Check Demo](https://www.youtube.com/watch?v=pD73LgNNiEw)  
 *(Note: Demo focuses on core feature; schedule and extended features added after submission)*
@@ -47,7 +47,7 @@ Nudge combines cutting-edge technologies for efficient meeting analysis:
 
 ---
 
-## 🎨 Graphics
+## Graphics
 
 ![nudge_logo2](https://github.com/user-attachments/assets/17892133-2fe5-486d-9c48-c0ac61e3ab77)
 ![nudge_slide2](https://github.com/user-attachments/assets/59f6b29a-0497-443b-9076-1d3fc42905d6)
@@ -56,6 +56,6 @@ Nudge combines cutting-edge technologies for efficient meeting analysis:
 
 ---
 
-## 👥 Contributors
+## License
 
-**MIT**
+This project is licensed under the MIT License
